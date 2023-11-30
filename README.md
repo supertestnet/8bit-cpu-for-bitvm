@@ -1,2 +1,23 @@
 # 8bit cpu for bitvm
 Write bitvm programs without learning circuit diagrams
+
+# What is this?
+In this project I aim to write a boolean logic circuit that emulates an 8 bit cpu and can run in bitvm. If I am successful, coders will be able to program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
+
+# What is the status?
+I am done with all major components of the cpu except the Control Unit, which is in progress. I expect to finish the Control Unit within the week. After the control unit is done, the CPU will probably sort-of work: you'll be able to write programs in Assembly, store them in RAM, run the computer, read the results it produces, and even lock up some bitcoins so that they can only be unlocked by your counterparty if he or she runs your program with inputs that produce some results you want.
+
+Howver, all of that assumes you can do something useful in only one clock cycle, which is probably not usually true. Emulating and automating clock cycles will be a challenge for me and I expect it to take an additional week. Before I automate it, I will have to do some tests of the circuit by copy-pasting the full circuit several times, manually resetting the "input" wires each time so that they point at the output gates of the previous copy of the circuit. That will be a real chore if I have to do that e.g. dozens of times per test.
+
+I hope to write some javascript to automate that so I can produce a version of the cpu that runs for like a thousand cycles or something, and I'll also need to write some javascript to decode bytes of RAM from 1s and 0s into something a human can understand -- like sprites on a screen, or text on a command prompt. Then I will need to document how to write programs for this cpu and show some examples that will hopefully inspire creativity in others to find out the limits of this cpu.
+
+# What was your inspiration?
+I had several inspirations. One of them came from making fun of ethereum's virtual machine one day. I joked that it isn't powerful enough to be a "world computer" (as some of the early hype claimed it was) because it only has about as much processing power as a gameboy. And then I realized that's not something to scoff at, that's super cool. And how cool would it be if *I* can emulate the original gameboy's cpu in bitvm and give people a way to validate whether someone successfully ran a gameboy ROM on bitcoin. If that's possible, you could lock up some bitcoins for someone that they can only take if they prove they beat you in [Doom](https://www.youtube.com/shorts/IXA1crHYPJE). How awesome would that be! So I started learning about the gameboy's cpu to see if it is feasible to emulate it in bitvm.
+
+While researching the gameboy I realized that I know next to nothing about programming at that low level -- i.e. I don't know how to design a boolean logic circuit capable of running programs written in a programming language like Assembly. So I started learning about 8bit computer design (the gameboy uses an 8bit cpu) from [this video series](https://www.youtube.com/watch?v=HyznrdDSSGM&list=PLowKtXNTBypGqImE405J2565dvjafglHU) by Ben Eater, and, since -- for every part of the design process -- he gives you direct instructions with helpful visuals and hands-on examples, I found I could follow his instructions in a circuit board simulator called [Logisim](http://www.cburch.com/logisim/).
+
+I also started making Ben's examples my own by tweaking them for use in bitvm. For example, I took one of the early circuits I produced (an 8 bit "alu" or arithmetic and logic unit) and made a [github project](https://github.com/supertestnet/8bit-alu-for-bitvm) for it where I included not only my logisim file but a logically-equivalent circuit that I wrote using python's circuit library, which I then exported into bristol fashion using python's Bristol Fashion Circuit Library. I also successfully ran a closely related 8bit adder in bitvm that I also produced while following Ben Eater's instructions.
+
+# What's next?
+
+Once this cpu is done I hope to document it, write some example programs, and help inspire others to write creative programs for it. Hopefully that will attract the attention of some smarter developers who can design *better* cpus for it -- I dream of a 16 bit cpu and then a 32 bit cpu capable of running the linux operating system and any linux program. Imagine writing smart contracts for bitcoin in popular, modern languages like javascript or python. I don't think we're anywhere near there yet but we're probably closer than we've ever been, and I can't wait to see what's next.
