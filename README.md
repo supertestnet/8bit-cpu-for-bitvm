@@ -1,2 +1,2 @@
-# 8bit-cpu-for-bitvm
-write bitvm programs without learning circuit diagrams
+# 8bit cpu for bitvm
+Write bitvm programs without learning circuit diagrams
