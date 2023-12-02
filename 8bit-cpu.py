@@ -184,14 +184,14 @@ RAM_15_1 = c.gate(op.id_, is_input=True)
 #(and the 8 debugging outputs near the
 #bottom) to view the contents of the bus,
 #which I find helps with debugging
-#bus_init = c.gate(op.id_, is_input=True)
-#bus_init = c.gate(op.id_, is_input=True)
-#bus_init = c.gate(op.id_, is_input=True)
-#bus_init = c.gate(op.id_, is_input=True)
-#bus_init = c.gate(op.id_, is_input=True)
-#bus_init = c.gate(op.id_, is_input=True)
-#bus_init = c.gate(op.id_, is_input=True)
-#bus_init = c.gate(op.id_, is_input=True)
+bus_init = c.gate(op.id_, is_input=True)
+bus_init = c.gate(op.id_, is_input=True)
+bus_init = c.gate(op.id_, is_input=True)
+bus_init = c.gate(op.id_, is_input=True)
+bus_init = c.gate(op.id_, is_input=True)
+bus_init = c.gate(op.id_, is_input=True)
+bus_init = c.gate(op.id_, is_input=True)
+bus_init = c.gate(op.id_, is_input=True)
 
 #time definer
 inverted_MC0 = c.gate(op.not_, [MC0])
@@ -210,7 +210,7 @@ MC_DEF_AND_5 = c.gate(op.and_, [MC0, MC1])
 MC_DEF_AND_6 = c.gate(op.and_, [MC_DEF_AND_5, inverted_MC2])
 T3 = c.gate(op.and_, [MC_DEF_AND_5, MC_DEF_AND_6])
 
-#instruction register interpreter
+#instruction register interpreter | Assembly decoder
 inverted_IR8 = c.gate(op.not_, [IR8])
 inverted_IR7 = c.gate(op.not_, [IR7])
 inverted_IR6 = c.gate(op.not_, [IR6])
@@ -224,6 +224,9 @@ LDA = c.gate(op.and_, [IR_INT_AND_2, IR_INT_AND_3])
 IR_INT_AND_4 = c.gate(op.and_, [inverted_IR5, IR6])
 IR_INT_AND_5 = c.gate(op.and_, [inverted_IR7, inverted_IR8])
 ADD = c.gate(op.and_, [IR_INT_AND_4, IR_INT_AND_5])
+IR_INT_AND_6 = c.gate(op.and_, [IR5, IR6])
+IR_INT_AND_7 = c.gate(op.and_, [inverted_IR7, inverted_IR8])
+SUB = c.gate(op.and_, [IR_INT_AND_6, IR_INT_AND_7])
 IR_INT_AND_31 = c.gate(op.and_, [IR5, IR6])
 IR_INT_AND_32 = c.gate(op.and_, [IR7, IR8])
 HLT = c.gate(op.and_, [IR_INT_AND_31, IR_INT_AND_32])
@@ -234,18 +237,24 @@ inverted_halt = c.gate(op.not_, [HLT])
 bus_to_mem_AND_0 = c.gate(op.and_, [T2, ADD])
 bus_to_mem_OR_0 = c.gate(op.or_, [bus_to_mem_AND_0, T0])
 bus_to_mem_AND_1 = c.gate(op.and_, [T2, LDA])
-bus_to_mem = c.gate(op.or_, [bus_to_mem_OR_0, bus_to_mem_AND_1])
+bus_to_mem_AND_2 = c.gate(op.and_, [T2, SUB])
+bus_to_mem_OR_1 = c.gate(op.or_, [bus_to_mem_AND_1, bus_to_mem_AND_2])
+bus_to_mem = c.gate(op.or_, [bus_to_mem_OR_0, bus_to_mem_OR_1])
 inverted_bus_to_mem = c.gate(op.not_, [bus_to_mem])
 bus_to_ram = c.gate(op.xor_, [MC0, MC0])
 inverted_bus_to_ram = c.gate(op.not_, [bus_to_ram])
 ram_to_bus_AND_0 = c.gate(op.and_, [T3, ADD])
 ram_to_bus_OR_0 = c.gate(op.or_, [ram_to_bus_AND_0, T1])
 ram_to_bus_AND_1 = c.gate(op.and_, [T3, LDA])
-ram_to_bus = c.gate(op.or_, [ram_to_bus_OR_0, ram_to_bus_AND_1])
+ram_to_bus_AND_2 = c.gate(op.and_, [T3, SUB])
+ram_to_bus_OR_1 = c.gate(op.or_, [ram_to_bus_AND_1, ram_to_bus_AND_2])
+ram_to_bus = c.gate(op.or_, [ram_to_bus_OR_0, ram_to_bus_OR_1])
 inverted_ram_to_bus = c.gate(op.not_, [ram_to_bus])
 ir_to_bus_AND_0 = c.gate(op.and_, [T2, LDA])
 ir_to_bus_AND_1 = c.gate(op.and_, [T2, ADD])
-ir_to_bus = c.gate(op.or_, [ir_to_bus_AND_0, ir_to_bus_AND_1])
+ir_to_bus_OR_1 = c.gate(op.or_, [ir_to_bus_AND_0, ir_to_bus_AND_1])
+ir_to_bus_AND_2 = c.gate(op.and_, [T2, SUB])
+ir_to_bus = c.gate(op.or_, [ir_to_bus_OR_1, ir_to_bus_AND_2])
 inverted_ir_to_bus = c.gate(op.not_, [ir_to_bus])
 bus_to_ir = T1
 inverted_bus_to_ir = c.gate(op.not_, [T1])
@@ -253,11 +262,15 @@ bus_to_A = c.gate(op.and_, [T3, LDA])
 inverted_bus_to_A = c.gate(op.not_, [bus_to_A])
 A_to_bus = c.gate(op.xor_, [MC0, MC0])
 inverted_A_to_bus = c.gate(op.not_, [A_to_bus])
-modify_A = c.gate(op.and_, [T3, ADD])
+modify_A_AND_0 = c.gate(op.and_, [T3, ADD])
+modify_A_AND_1 = c.gate(op.and_, [T3, SUB])
+modify_A = c.gate(op.or_, [modify_A_AND_0, modify_A_AND_1])
 inverted_modify_A = c.gate(op.not_, [modify_A])
-invert_B = c.gate(op.xor_, [MC0, MC0])
+invert_B = c.gate(op.and_, [T3, SUB])
 inverted_invert_B = c.gate(op.not_, [invert_B])
-bus_to_B = c.gate(op.and_, [T3, ADD])
+bus_to_B_AND_0 = c.gate(op.and_, [T3, ADD])
+bus_to_B_AND_1 = c.gate(op.and_, [T3, SUB])
+bus_to_B = c.gate(op.or_, [bus_to_B_AND_0, bus_to_B_AND_1])
 inverted_bus_to_B = c.gate(op.not_, [bus_to_B])
 increment_pc = T1
 #TODO: this might change so keep the todo around
@@ -1208,13 +1221,13 @@ post_B8 = c.gate(op.or_, [BUS_TO_B_AND_14, BUS_TO_B_AND_15])
 
 #inversion of register B
 inverted_B1 = c.gate(op.not_, [post_B1])
-inverted_B2 = c.gate(op.not_, [post_B1])
-inverted_B3 = c.gate(op.not_, [post_B1])
-inverted_B4 = c.gate(op.not_, [post_B1])
-inverted_B5 = c.gate(op.not_, [post_B1])
-inverted_B6 = c.gate(op.not_, [post_B1])
-inverted_B7 = c.gate(op.not_, [post_B1])
-inverted_B8 = c.gate(op.not_, [post_B1])
+inverted_B2 = c.gate(op.not_, [post_B2])
+inverted_B3 = c.gate(op.not_, [post_B3])
+inverted_B4 = c.gate(op.not_, [post_B4])
+inverted_B5 = c.gate(op.not_, [post_B5])
+inverted_B6 = c.gate(op.not_, [post_B6])
+inverted_B7 = c.gate(op.not_, [post_B7])
+inverted_B8 = c.gate(op.not_, [post_B8])
 
 #B1_inverter
 first_B1_and = c.gate(op.and_, [inverted_B1, invert_B])
@@ -2101,20 +2114,20 @@ final_RAM_15_1_out = c.gate(op.id_, [RAM_15_1_out], is_output=True)
 #(and the 8 debugging inputs near the
 #beginning) to view the contents of the bus,
 #which I find helps with debugging
-# final_BUS_8_out = c.gate(op.id_, [BUS_8], is_output=True)
-# final_BUS_7_out = c.gate(op.id_, [BUS_7], is_output=True)
-# final_BUS_6_out = c.gate(op.id_, [BUS_6], is_output=True)
-# final_BUS_5_out = c.gate(op.id_, [BUS_5], is_output=True)
-# final_BUS_4_out = c.gate(op.id_, [BUS_4], is_output=True)
-# final_BUS_3_out = c.gate(op.id_, [BUS_3], is_output=True)
-# final_BUS_2_out = c.gate(op.id_, [BUS_2], is_output=True)
-# final_BUS_1_out = c.gate(op.id_, [BUS_1], is_output=True)
+final_BUS_8_out = c.gate(op.id_, [BUS_8], is_output=True)
+final_BUS_7_out = c.gate(op.id_, [BUS_7], is_output=True)
+final_BUS_6_out = c.gate(op.id_, [BUS_6], is_output=True)
+final_BUS_5_out = c.gate(op.id_, [BUS_5], is_output=True)
+final_BUS_4_out = c.gate(op.id_, [BUS_4], is_output=True)
+final_BUS_3_out = c.gate(op.id_, [BUS_3], is_output=True)
+final_BUS_2_out = c.gate(op.id_, [BUS_2], is_output=True)
+final_BUS_1_out = c.gate(op.id_, [post_B2], is_output=True)
 
 #run it like this: ./bin/python 8bit-cpu.py '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]'
-# print(c.evaluate(initial_state))
+print(c.evaluate(initial_state))
 
-for line in bfcl.circuit(c).emit().split('\n'):
-	print(line)
+# for line in bfcl.circuit(c).emit().split('\n'):
+# 	print(line)
 
 '''
 var input = [
@@ -2149,8 +2162,8 @@ var input = [
 0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,1,
 0,0,0,0,0,0,0,1
-//if debugging inputs and outputs are turned on, add this line:
-,0,0,0,0,0,0,0,0
+//if debugging inputs and outputs are turned on, uncomment this line:
+//,0,0,0,0,0,0,0,0
 ];
 document.write( JSON.stringify( input ) );
 '''
