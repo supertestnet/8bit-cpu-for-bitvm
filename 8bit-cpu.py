@@ -180,6 +180,18 @@ RAM_15_4 = c.gate(op.id_, is_input=True)
 RAM_15_3 = c.gate(op.id_, is_input=True)
 RAM_15_2 = c.gate(op.id_, is_input=True)
 RAM_15_1 = c.gate(op.id_, is_input=True)
+#debugging: turn on the following inputs
+#(and the 8 debugging outputs near the
+#bottom) to view the contents of the bus,
+#which I find helps with debugging
+#bus_init = c.gate(op.id_, is_input=True)
+#bus_init = c.gate(op.id_, is_input=True)
+#bus_init = c.gate(op.id_, is_input=True)
+#bus_init = c.gate(op.id_, is_input=True)
+#bus_init = c.gate(op.id_, is_input=True)
+#bus_init = c.gate(op.id_, is_input=True)
+#bus_init = c.gate(op.id_, is_input=True)
+#bus_init = c.gate(op.id_, is_input=True)
 
 #time definer
 inverted_MC0 = c.gate(op.not_, [MC0])
@@ -195,7 +207,7 @@ MC_DEF_AND_3 = c.gate(op.and_, [inverted_MC0, MC1])
 MC_DEF_AND_4 = c.gate(op.and_, [MC_DEF_AND_3, inverted_MC2])
 T2 = c.gate(op.and_, [MC_DEF_AND_3, MC_DEF_AND_4])
 MC_DEF_AND_5 = c.gate(op.and_, [MC0, MC1])
-MC_DEF_AND_6 = c.gate(op.and_, [MC_DEF_AND_3, inverted_MC2])
+MC_DEF_AND_6 = c.gate(op.and_, [MC_DEF_AND_5, inverted_MC2])
 T3 = c.gate(op.and_, [MC_DEF_AND_5, MC_DEF_AND_6])
 
 #instruction register interpreter
@@ -590,7 +602,7 @@ ram_8_AND_13 = c.gate(op.and_, [AND_02_8_plus_en02, inverted_M0])
 ram_8_OR_6 = c.gate(op.or_, [ram_8_AND_12, ram_8_AND_13])
 ram_8_AND_14 = c.gate(op.and_, [AND_01_8_plus_en01, M0])
 ram_8_AND_15 = c.gate(op.and_, [AND_00_8_plus_en00, inverted_M0])
-ram_8_OR_7 = c.gate(op.or_, [ram_8_AND_12, ram_8_AND_13])
+ram_8_OR_7 = c.gate(op.or_, [ram_8_AND_14, ram_8_AND_15])
 ram_8_AND_16 = c.gate(op.and_, [ram_8_OR_0, M1])
 ram_8_AND_17 = c.gate(op.and_, [ram_8_OR_1, inverted_M1])
 ram_8_OR_8 = c.gate(op.or_, [ram_8_AND_16, ram_8_AND_17])
@@ -611,7 +623,7 @@ ram_8_AND_27 = c.gate(op.and_, [ram_8_OR_11, inverted_M2])
 ram_8_OR_13 = c.gate(op.or_, [ram_8_AND_26, ram_8_AND_27])
 ram_8_AND_28 = c.gate(op.and_, [ram_8_OR_12, M3])
 ram_8_AND_29 = c.gate(op.and_, [ram_8_OR_13, inverted_M3])
-ram_8 = c.gate(op.or_, [ram_8_AND_26, ram_8_AND_27])
+ram_8 = c.gate(op.or_, [ram_8_AND_28, ram_8_AND_29])
 
 #ram7 selector
 ram_7_AND_0 = c.gate(op.and_, [AND_15_7_plus_en15, M0])
@@ -637,7 +649,7 @@ ram_7_AND_13 = c.gate(op.and_, [AND_02_7_plus_en02, inverted_M0])
 ram_7_OR_6 = c.gate(op.or_, [ram_7_AND_12, ram_7_AND_13])
 ram_7_AND_14 = c.gate(op.and_, [AND_01_7_plus_en01, M0])
 ram_7_AND_15 = c.gate(op.and_, [AND_00_7_plus_en00, inverted_M0])
-ram_7_OR_7 = c.gate(op.or_, [ram_7_AND_12, ram_7_AND_13])
+ram_7_OR_7 = c.gate(op.or_, [ram_7_AND_14, ram_7_AND_15])
 ram_7_AND_16 = c.gate(op.and_, [ram_7_OR_0, M1])
 ram_7_AND_17 = c.gate(op.and_, [ram_7_OR_1, inverted_M1])
 ram_7_OR_8 = c.gate(op.or_, [ram_7_AND_16, ram_7_AND_17])
@@ -658,7 +670,7 @@ ram_7_AND_27 = c.gate(op.and_, [ram_7_OR_11, inverted_M2])
 ram_7_OR_13 = c.gate(op.or_, [ram_7_AND_26, ram_7_AND_27])
 ram_7_AND_28 = c.gate(op.and_, [ram_7_OR_12, M3])
 ram_7_AND_29 = c.gate(op.and_, [ram_7_OR_13, inverted_M3])
-ram_7 = c.gate(op.or_, [ram_7_AND_26, ram_7_AND_27])
+ram_7 = c.gate(op.or_, [ram_7_AND_28, ram_7_AND_29])
 
 #ram6 selector
 ram_6_AND_0 = c.gate(op.and_, [AND_15_6_plus_en15, M0])
@@ -684,7 +696,7 @@ ram_6_AND_13 = c.gate(op.and_, [AND_02_6_plus_en02, inverted_M0])
 ram_6_OR_6 = c.gate(op.or_, [ram_6_AND_12, ram_6_AND_13])
 ram_6_AND_14 = c.gate(op.and_, [AND_01_6_plus_en01, M0])
 ram_6_AND_15 = c.gate(op.and_, [AND_00_6_plus_en00, inverted_M0])
-ram_6_OR_7 = c.gate(op.or_, [ram_6_AND_12, ram_6_AND_13])
+ram_6_OR_7 = c.gate(op.or_, [ram_6_AND_14, ram_6_AND_15])
 ram_6_AND_16 = c.gate(op.and_, [ram_6_OR_0, M1])
 ram_6_AND_17 = c.gate(op.and_, [ram_6_OR_1, inverted_M1])
 ram_6_OR_8 = c.gate(op.or_, [ram_6_AND_16, ram_6_AND_17])
@@ -705,7 +717,7 @@ ram_6_AND_27 = c.gate(op.and_, [ram_6_OR_11, inverted_M2])
 ram_6_OR_13 = c.gate(op.or_, [ram_6_AND_26, ram_6_AND_27])
 ram_6_AND_28 = c.gate(op.and_, [ram_6_OR_12, M3])
 ram_6_AND_29 = c.gate(op.and_, [ram_6_OR_13, inverted_M3])
-ram_6 = c.gate(op.or_, [ram_6_AND_26, ram_6_AND_27])
+ram_6 = c.gate(op.or_, [ram_6_AND_28, ram_6_AND_29])
 
 #ram5 selector
 ram_5_AND_0 = c.gate(op.and_, [AND_15_5_plus_en15, M0])
@@ -731,7 +743,7 @@ ram_5_AND_13 = c.gate(op.and_, [AND_02_5_plus_en02, inverted_M0])
 ram_5_OR_6 = c.gate(op.or_, [ram_5_AND_12, ram_5_AND_13])
 ram_5_AND_14 = c.gate(op.and_, [AND_01_5_plus_en01, M0])
 ram_5_AND_15 = c.gate(op.and_, [AND_00_5_plus_en00, inverted_M0])
-ram_5_OR_7 = c.gate(op.or_, [ram_5_AND_12, ram_5_AND_13])
+ram_5_OR_7 = c.gate(op.or_, [ram_5_AND_14, ram_5_AND_15])
 ram_5_AND_16 = c.gate(op.and_, [ram_5_OR_0, M1])
 ram_5_AND_17 = c.gate(op.and_, [ram_5_OR_1, inverted_M1])
 ram_5_OR_8 = c.gate(op.or_, [ram_5_AND_16, ram_5_AND_17])
@@ -752,7 +764,7 @@ ram_5_AND_27 = c.gate(op.and_, [ram_5_OR_11, inverted_M2])
 ram_5_OR_13 = c.gate(op.or_, [ram_5_AND_26, ram_5_AND_27])
 ram_5_AND_28 = c.gate(op.and_, [ram_5_OR_12, M3])
 ram_5_AND_29 = c.gate(op.and_, [ram_5_OR_13, inverted_M3])
-ram_5 = c.gate(op.or_, [ram_5_AND_26, ram_5_AND_27])
+ram_5 = c.gate(op.or_, [ram_5_AND_28, ram_5_AND_29])
 
 #ram4 selector
 ram_4_AND_0 = c.gate(op.and_, [AND_15_4_plus_en15, M0])
@@ -778,7 +790,7 @@ ram_4_AND_13 = c.gate(op.and_, [AND_02_4_plus_en02, inverted_M0])
 ram_4_OR_6 = c.gate(op.or_, [ram_4_AND_12, ram_4_AND_13])
 ram_4_AND_14 = c.gate(op.and_, [AND_01_4_plus_en01, M0])
 ram_4_AND_15 = c.gate(op.and_, [AND_00_4_plus_en00, inverted_M0])
-ram_4_OR_7 = c.gate(op.or_, [ram_4_AND_12, ram_4_AND_13])
+ram_4_OR_7 = c.gate(op.or_, [ram_4_AND_14, ram_4_AND_15])
 ram_4_AND_16 = c.gate(op.and_, [ram_4_OR_0, M1])
 ram_4_AND_17 = c.gate(op.and_, [ram_4_OR_1, inverted_M1])
 ram_4_OR_8 = c.gate(op.or_, [ram_4_AND_16, ram_4_AND_17])
@@ -799,7 +811,7 @@ ram_4_AND_27 = c.gate(op.and_, [ram_4_OR_11, inverted_M2])
 ram_4_OR_13 = c.gate(op.or_, [ram_4_AND_26, ram_4_AND_27])
 ram_4_AND_28 = c.gate(op.and_, [ram_4_OR_12, M3])
 ram_4_AND_29 = c.gate(op.and_, [ram_4_OR_13, inverted_M3])
-ram_4 = c.gate(op.or_, [ram_4_AND_26, ram_4_AND_27])
+ram_4 = c.gate(op.or_, [ram_4_AND_28, ram_4_AND_29])
 
 #ram3 selector
 ram_3_AND_0 = c.gate(op.and_, [AND_15_3_plus_en15, M0])
@@ -825,7 +837,7 @@ ram_3_AND_13 = c.gate(op.and_, [AND_02_3_plus_en02, inverted_M0])
 ram_3_OR_6 = c.gate(op.or_, [ram_3_AND_12, ram_3_AND_13])
 ram_3_AND_14 = c.gate(op.and_, [AND_01_3_plus_en01, M0])
 ram_3_AND_15 = c.gate(op.and_, [AND_00_3_plus_en00, inverted_M0])
-ram_3_OR_7 = c.gate(op.or_, [ram_3_AND_12, ram_3_AND_13])
+ram_3_OR_7 = c.gate(op.or_, [ram_3_AND_14, ram_3_AND_15])
 ram_3_AND_16 = c.gate(op.and_, [ram_3_OR_0, M1])
 ram_3_AND_17 = c.gate(op.and_, [ram_3_OR_1, inverted_M1])
 ram_3_OR_8 = c.gate(op.or_, [ram_3_AND_16, ram_3_AND_17])
@@ -846,7 +858,7 @@ ram_3_AND_27 = c.gate(op.and_, [ram_3_OR_11, inverted_M2])
 ram_3_OR_13 = c.gate(op.or_, [ram_3_AND_26, ram_3_AND_27])
 ram_3_AND_28 = c.gate(op.and_, [ram_3_OR_12, M3])
 ram_3_AND_29 = c.gate(op.and_, [ram_3_OR_13, inverted_M3])
-ram_3 = c.gate(op.or_, [ram_3_AND_26, ram_3_AND_27])
+ram_3 = c.gate(op.or_, [ram_3_AND_28, ram_3_AND_29])
 
 #ram2 selector
 ram_2_AND_0 = c.gate(op.and_, [AND_15_2_plus_en15, M0])
@@ -872,7 +884,7 @@ ram_2_AND_13 = c.gate(op.and_, [AND_02_2_plus_en02, inverted_M0])
 ram_2_OR_6 = c.gate(op.or_, [ram_2_AND_12, ram_2_AND_13])
 ram_2_AND_14 = c.gate(op.and_, [AND_01_2_plus_en01, M0])
 ram_2_AND_15 = c.gate(op.and_, [AND_00_2_plus_en00, inverted_M0])
-ram_2_OR_7 = c.gate(op.or_, [ram_2_AND_12, ram_2_AND_13])
+ram_2_OR_7 = c.gate(op.or_, [ram_2_AND_14, ram_2_AND_15])
 ram_2_AND_16 = c.gate(op.and_, [ram_2_OR_0, M1])
 ram_2_AND_17 = c.gate(op.and_, [ram_2_OR_1, inverted_M1])
 ram_2_OR_8 = c.gate(op.or_, [ram_2_AND_16, ram_2_AND_17])
@@ -893,7 +905,7 @@ ram_2_AND_27 = c.gate(op.and_, [ram_2_OR_11, inverted_M2])
 ram_2_OR_13 = c.gate(op.or_, [ram_2_AND_26, ram_2_AND_27])
 ram_2_AND_28 = c.gate(op.and_, [ram_2_OR_12, M3])
 ram_2_AND_29 = c.gate(op.and_, [ram_2_OR_13, inverted_M3])
-ram_2 = c.gate(op.or_, [ram_2_AND_26, ram_2_AND_27])
+ram_2 = c.gate(op.or_, [ram_2_AND_28, ram_2_AND_29])
 
 #ram1 selector
 ram_1_AND_0 = c.gate(op.and_, [AND_15_1_plus_en15, M0])
@@ -919,7 +931,7 @@ ram_1_AND_13 = c.gate(op.and_, [AND_02_1_plus_en02, inverted_M0])
 ram_1_OR_6 = c.gate(op.or_, [ram_1_AND_12, ram_1_AND_13])
 ram_1_AND_14 = c.gate(op.and_, [AND_01_1_plus_en01, M0])
 ram_1_AND_15 = c.gate(op.and_, [AND_00_1_plus_en00, inverted_M0])
-ram_1_OR_7 = c.gate(op.or_, [ram_1_AND_12, ram_1_AND_13])
+ram_1_OR_7 = c.gate(op.or_, [ram_1_AND_14, ram_1_AND_15])
 ram_1_AND_16 = c.gate(op.and_, [ram_1_OR_0, M1])
 ram_1_AND_17 = c.gate(op.and_, [ram_1_OR_1, inverted_M1])
 ram_1_OR_8 = c.gate(op.or_, [ram_1_AND_16, ram_1_AND_17])
@@ -940,7 +952,7 @@ ram_1_AND_27 = c.gate(op.and_, [ram_1_OR_11, inverted_M2])
 ram_1_OR_13 = c.gate(op.or_, [ram_1_AND_26, ram_1_AND_27])
 ram_1_AND_28 = c.gate(op.and_, [ram_1_OR_12, M3])
 ram_1_AND_29 = c.gate(op.and_, [ram_1_OR_13, inverted_M3])
-ram_1 = c.gate(op.or_, [ram_1_AND_26, ram_1_AND_27])
+ram_1 = c.gate(op.or_, [ram_1_AND_28, ram_1_AND_29])
 
 #ram to bus mux
 ram_to_bus_8 = c.gate(op.and_, [ram_to_bus, ram_8])
@@ -1034,8 +1046,9 @@ BUS_4_AND_6 = c.gate(op.and_, [BUS_4_OR_2, BUS_4_OR_1])
 BUS_4 = c.gate(op.or_, [BUS_4_AND_5, BUS_4_AND_6])
 
 #bus5
+BUS_5_ZERO = c.gate(op.xor_, [ram_to_bus, ram_to_bus])
 BUS_5_AND_2 = c.gate(op.and_, [ram_to_bus, ram_to_bus_5])
-BUS_5_AND_3 = c.gate(op.and_, [inverted_A_to_bus, IR5])
+BUS_5_AND_3 = c.gate(op.and_, [inverted_A_to_bus, BUS_5_ZERO])
 BUS_5_AND_4 = c.gate(op.and_, [A_to_bus, A5])
 BUS_5_OR_1 = c.gate(op.or_, [BUS_5_AND_3, BUS_5_AND_4])
 BUS_5_OR_2 = c.gate(op.or_, [ir_to_bus, A_to_bus])
@@ -1045,8 +1058,9 @@ BUS_5_AND_6 = c.gate(op.and_, [BUS_5_OR_2, BUS_5_OR_1])
 BUS_5 = c.gate(op.or_, [BUS_5_AND_5, BUS_5_AND_6])
 
 #bus6
+BUS_6_ZERO = c.gate(op.xor_, [ram_to_bus, ram_to_bus])
 BUS_6_AND_2 = c.gate(op.and_, [ram_to_bus, ram_to_bus_6])
-BUS_6_AND_3 = c.gate(op.and_, [inverted_A_to_bus, IR6])
+BUS_6_AND_3 = c.gate(op.and_, [inverted_A_to_bus, BUS_6_ZERO])
 BUS_6_AND_4 = c.gate(op.and_, [A_to_bus, A6])
 BUS_6_OR_1 = c.gate(op.or_, [BUS_6_AND_3, BUS_6_AND_4])
 BUS_6_OR_2 = c.gate(op.or_, [ir_to_bus, A_to_bus])
@@ -1056,8 +1070,9 @@ BUS_6_AND_6 = c.gate(op.and_, [BUS_6_OR_2, BUS_6_OR_1])
 BUS_6 = c.gate(op.or_, [BUS_6_AND_5, BUS_6_AND_6])
 
 #bus7
+BUS_7_ZERO = c.gate(op.xor_, [ram_to_bus, ram_to_bus])
 BUS_7_AND_2 = c.gate(op.and_, [ram_to_bus, ram_to_bus_7])
-BUS_7_AND_3 = c.gate(op.and_, [inverted_A_to_bus, IR7])
+BUS_7_AND_3 = c.gate(op.and_, [inverted_A_to_bus, BUS_7_ZERO])
 BUS_7_AND_4 = c.gate(op.and_, [A_to_bus, A7])
 BUS_7_OR_1 = c.gate(op.or_, [BUS_7_AND_3, BUS_7_AND_4])
 BUS_7_OR_2 = c.gate(op.or_, [ir_to_bus, A_to_bus])
@@ -1067,8 +1082,9 @@ BUS_7_AND_6 = c.gate(op.and_, [BUS_7_OR_2, BUS_7_OR_1])
 BUS_7 = c.gate(op.or_, [BUS_7_AND_5, BUS_7_AND_6])
 
 #bus8
+BUS_8_ZERO = c.gate(op.xor_, [ram_to_bus, ram_to_bus])
 BUS_8_AND_2 = c.gate(op.and_, [ram_to_bus, ram_to_bus_8])
-BUS_8_AND_3 = c.gate(op.and_, [inverted_A_to_bus, IR8])
+BUS_8_AND_3 = c.gate(op.and_, [inverted_A_to_bus, BUS_8_ZERO])
 BUS_8_AND_4 = c.gate(op.and_, [A_to_bus, A8])
 BUS_8_OR_1 = c.gate(op.or_, [BUS_8_AND_3, BUS_8_AND_4])
 BUS_8_OR_2 = c.gate(op.or_, [ir_to_bus, A_to_bus])
@@ -2081,9 +2097,60 @@ final_RAM_15_4_out = c.gate(op.id_, [RAM_15_4_out], is_output=True)
 final_RAM_15_3_out = c.gate(op.id_, [RAM_15_3_out], is_output=True)
 final_RAM_15_2_out = c.gate(op.id_, [RAM_15_2_out], is_output=True)
 final_RAM_15_1_out = c.gate(op.id_, [RAM_15_1_out], is_output=True)
+#debugging: turn on the following outputs
+#(and the 8 debugging inputs near the
+#beginning) to view the contents of the bus,
+#which I find helps with debugging
+# final_BUS_8_out = c.gate(op.id_, [BUS_8], is_output=True)
+# final_BUS_7_out = c.gate(op.id_, [BUS_7], is_output=True)
+# final_BUS_6_out = c.gate(op.id_, [BUS_6], is_output=True)
+# final_BUS_5_out = c.gate(op.id_, [BUS_5], is_output=True)
+# final_BUS_4_out = c.gate(op.id_, [BUS_4], is_output=True)
+# final_BUS_3_out = c.gate(op.id_, [BUS_3], is_output=True)
+# final_BUS_2_out = c.gate(op.id_, [BUS_2], is_output=True)
+# final_BUS_1_out = c.gate(op.id_, [BUS_1], is_output=True)
 
 #run it like this: ./bin/python 8bit-cpu.py '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]'
 print(c.evaluate(initial_state))
 
 # for line in bfcl.circuit(c).emit().split('\n'):
 # 	print(line)
+
+'''
+var input = [
+//program counter
+0,0,0,0,
+//microinstruction counter
+0,0,0,
+//memory address register
+0,0,0,0,
+//initial carry out
+0,
+//register A
+0,0,0,0,0,0,0,0,
+//register B
+0,0,0,0,0,0,0,0,
+//instruction register
+0,0,0,0,0,0,0,0,
+//ram
+0,0,0,1,1,1,1,1,
+0,0,1,0,1,1,1,0,
+1,1,1,1,0,0,0,0,
+1,1,1,1,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,1,
+0,0,0,0,0,0,0,1
+//if debugging inputs and outputs are turned on, add this line:
+,0,0,0,0,0,0,0,0
+];
+document.write( JSON.stringify( input ) );
+'''
