@@ -1,11 +1,7 @@
 #!/bin/bash
 
 input=$(awk '{print}')
-
-# midstate=$(echo $input | jq -r '.[0], .[3]')
-midstate=$(echo $input | jq .[])
-
-json=($midstate)
+json=($(echo $input | jq .[]))
 
 printf \
 "program counter\n"\

@@ -236,6 +236,10 @@ LDI = c.gate(op.and_, [IR_INT_AND_10, IR_INT_AND_11])
 IR_INT_AND_12 = c.gate(op.and_, [inverted_IR5, IR6])
 IR_INT_AND_13 = c.gate(op.and_, [IR7, inverted_IR8])
 JMP = c.gate(op.and_, [IR_INT_AND_12, IR_INT_AND_13])
+IR_INT_AND_14 = c.gate(op.and_, [IR5, IR6])
+IR_INT_AND_15 = c.gate(op.and_, [IR7, inverted_IR8])
+JIC_prep = c.gate(op.and_, [IR_INT_AND_14, IR_INT_AND_15])
+JIC = c.gate(op.and_, [JIC_prep, initial_carry_out])
 IR_INT_AND_31 = c.gate(op.and_, [IR5, IR6])
 IR_INT_AND_32 = c.gate(op.and_, [IR7, IR8])
 HLT = c.gate(op.and_, [IR_INT_AND_31, IR_INT_AND_32])
@@ -271,7 +275,9 @@ ir_to_bus_AND_4 = c.gate(op.and_, [T2, LDI])
 ir_to_bus_AND_5 = c.gate(op.and_, [T2, JMP])
 ir_to_bus_OR_2 = c.gate(op.or_, [ir_to_bus_AND_4, ir_to_bus_AND_5])
 ir_to_bus_OR_3 = c.gate(op.or_, [ir_to_bus_OR_0, ir_to_bus_OR_1])
-ir_to_bus = c.gate(op.or_, [ir_to_bus_OR_2, ir_to_bus_OR_3])
+ir_to_bus_AND_6 = c.gate(op.and_, [T2, JIC])
+ir_to_bus_OR_4 = c.gate(op.or_, [ir_to_bus_OR_2, ir_to_bus_AND_6])
+ir_to_bus = c.gate(op.or_, [ir_to_bus_OR_3, ir_to_bus_OR_4])
 inverted_ir_to_bus = c.gate(op.not_, [ir_to_bus])
 bus_to_ir = T1
 inverted_bus_to_ir = c.gate(op.not_, [T1])
@@ -306,8 +312,12 @@ mc_reset = MC2
 inverted_mc_reset = inverted_MC2
 counter_to_bus = T0
 inverted_counter_to_bus = c.gate(op.not_, [counter_to_bus])
-bus_to_counter = c.gate(op.and_, [T2, JMP])
+bus_to_counter_AND_0 = c.gate(op.and_, [T2, JMP])
+bus_to_counter_AND_1 = c.gate(op.and_, [T2, JIC])
+bus_to_counter = c.gate(op.or_, [bus_to_counter_AND_0, bus_to_counter_AND_1])
 inverted_bus_to_counter = c.gate(op.not_, [bus_to_counter])
+void_carry = c.gate(op.and_, [T3, JIC])
+inverted_void_carry = c.gate(op.not_, [void_carry])
 
 #memory address register
 inverted_M3 = c.gate(op.not_, [M3])
@@ -1398,6 +1408,24 @@ modify_A_out = c.gate(op.xor_, [modify_A, modify_A])
 #set the operation bit to 0
 invert_B_out = c.gate(op.xor_, [invert_B, invert_B])
 
+#set carry flag
+#if g55 is on, the carry flag should definitely be on
+#otherwise, if void_carry is off, it should be whatever
+#initial_carry_in is
+#but if void_carry is on and g55 is off, the carry flag should be off
+#g55 void_carry initial_carry | carry_out
+# 0      0           0        |     0
+# 0      0           1        |     1 <-- this one needs to be on so
+# 0      1           0        |     0     that the state of the carry
+# 0      1           1        |     0     gets passed through to JIC
+# 1      0           0        |     1     if necessary, since that
+# 1      0           1        |     1     always happens on a micro-
+# 1      1           0        |     1     instruction AFTER an add-
+# 1      1           1        |     1     ition has taken place
+# I can do that with this: g55 || (!void AND initial)
+carry_AND = c.gate(op.and_, [inverted_void_carry, initial_carry_out])
+carry_out = c.gate(op.or_, [g55, carry_AND])
+
 #if modify_A is set, pass the alu's result to A_output,
 #otherwise pass A_input to A_output unchanged
 #A1_selector
@@ -1975,7 +2003,7 @@ final_M3_OUT = c.gate(op.id_, [M3_OUT], is_output=True)
 final_M2_OUT = c.gate(op.id_, [M2_OUT], is_output=True)
 final_M1_OUT = c.gate(op.id_, [M1_OUT], is_output=True)
 final_M0_OUT = c.gate(op.id_, [M0_OUT], is_output=True)
-final_carry_out = c.gate(op.id_, [g55], is_output=True)
+final_carry_out = c.gate(op.id_, [carry_out], is_output=True)
 final_A8_out = c.gate(op.id_, [A8_out], is_output=True)
 final_A7_out = c.gate(op.id_, [A7_out], is_output=True)
 final_A6_out = c.gate(op.id_, [A6_out], is_output=True)
@@ -2142,10 +2170,10 @@ final_RAM_15_1_out = c.gate(op.id_, [RAM_15_1_out], is_output=True)
 # final_BUS_1_out = c.gate(op.id_, [BUS_1], is_output=True)
 
 #run it like this: ./bin/python 8bit-cpu.py '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]'
-# print(c.evaluate(initial_state))
+print(c.evaluate(initial_state))
 
-for line in bfcl.circuit(c).emit().split('\n'):
-	print(line)
+# for line in bfcl.circuit(c).emit().split('\n'):
+	# print(line)
 
 '''
 var input = [
