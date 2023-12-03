@@ -5,11 +5,68 @@ Write bitvm programs without learning circuit diagrams
 In this project I aim to write a boolean logic circuit that emulates an 8 bit cpu and can run in bitvm. If I am successful, coders will be able to program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
 
 # What is the status?
-I am done with all major components of the cpu. I am currently improving its Assembly decoder so that it can run more Assembly commands, and I expect to finish this tomorrow (but we'll see!). Already, even though the Assembly decoder is not finished, the CPU sort of works: you can write programs in Assembly (using only the commands it can currently decode), store them in RAM, run the computer, read the results it produces, and (I haven't tested this part yet) even lock up some bitcoins so that they can only be unlocked by your counterparty if he or she runs your program with inputs that produce some results you want.
+Every component of the cpu has been successfully tested. The last thing I successfully tested was a conditional jump instruction I wrote for its Assembly decoder, which makes the cpu turing complete. It currently supports 9 Assembly instructions documented below. So the status is: you can write programs in Assembly (using only the commands it currently supports), store them in RAM, run the computer, read the results it produces, and (I haven't tested this part yet) even lock up some bitcoins so that they can only be unlocked by your counterparty if he or she runs your program with inputs that produce some results you want.
 
-Howrver, all of that assumes you can do something useful in only one clock cycle, which is probably not usually true. Emulating and automating clock cycles will be a challenge for me and I expect it to take an additional week. Before I automate it, I will have to do some tests of the circuit by copy-pasting the full circuit several times, manually resetting the "input" wires each time so that they point at the output gates of the previous copy of the circuit. That will be a real chore if I have to do that e.g. dozens of times per test.
+However, all of that assumes you can do something useful in only one clock cycle, which is probably not usually true. Emulating and automating clock cycles will be a challenge for me and I expect it to take an additional week. Before I automate it, I will have to do some tests of the circuit by copy-pasting the full circuit several times, manually resetting the "input" wires each time so that they point at the output gates of the previous copy of the circuit. That will be a real chore if I have to do that e.g. dozens of times per test.
 
-I hope to write some javascript to automate that so I can produce a version of the cpu that runs for like a thousand cycles or something, and I'll also need to write some javascript to decode bytes of RAM from 1s and 0s into something a human can understand -- like sprites on a screen, or text on a command prompt. Then I will need to document how to write programs for this cpu and show some examples that will hopefully inspire creativity in others to find out the limits of this cpu, or even make a better one.
+I hope to write some javascript to automate that so I can produce a version of the cpu that runs for like a thousand cycles or something, and I'll also need to write some javascript to decode bytes of RAM from 1s and 0s into something a human can understand -- like sprites on a screen, or text on a command prompt. Then I will need to document how to write and test programs for this cpu and show some examples that will hopefully inspire creativity in others to find out the limits of this cpu, or even make a better one.
+
+# Supported commands
+0. NOP -- do nothing
+1. LDA -- load a value from ram into register A
+2. ADD -- put the sum of registers A and B in register A
+3. SUB -- put the difference of registers A and B in register A
+4. STA -- store register A in ram
+5. LDI -- load a value directly into register A (not from ram)
+6. JMP -- jump to another instruction
+7. JIC -- jump to another instruction if the carry bit is set, that is, if register A overflowed during computation of the previous instruction (this allows for "bounded loops" so that the cpu can run a loop for X number of times and then break out of it)
+8. HLT -- stop the computer (must be entered twice)
+
+# Sample programs
+
+## Count forever
+
+The following program initializes the A register to 0 and then begins an incrementation loop, incrementing that register by 1 repeatedly. It gets stuck in this loop until the cpu stops cycling. In an ideal world, would be never, it would never stop cycling, but on bitcoin, it must stop before 2^128 cycles go by because bitcoin addresses don't have enough tapleaves to make more cycles than that.
+
+Here it is in Assembly:
+
+```
+LDI 3
+STA 15
+LDI 0
+ADD 15
+STA 14
+JMP 3
+```
+
+Here is the binary:
+
+```
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,1,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+```
+
+## Bounded loop test
+
+The following program initializes the A register to a high value (252) and then begins enters an incrementation loop, incrementing that register by 1 repeatedly. It would get stuck in that loop forever, except that the JIC instruction causes it to depart the loop with Register A overflows due to being too small to hold the number 256. The JIC flag thus breaks it out of the loop, skipping to an instruction that stores the contents of the A register (which are now 0 due to the overflow) and halts the cpu.
+
+Here it is in Assembly:
+
+```
+LDI 1
+STA 14
+LDA 15
+ADD 14
+JIC 6
+JMP 3
+STA 15
+HLT
+```
+
+Here it is in binary (with the 15th byte of RAM initialized to 252, not documented in the Assembly code)
+
+```
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0]
+```
 
 # What was your inspiration?
 I had several inspirations. One of them came from making fun of ethereum's virtual machine one day. I joked that it isn't powerful enough to be a "world computer" (as some of the early hype claimed it was) because it only has about as much processing power as a gameboy. And then I realized that's not something to scoff at, that's super cool. And how cool would it be if *I* can emulate the original gameboy's cpu in bitvm and give people a way to validate whether someone successfully ran a gameboy ROM on bitcoin. If that's possible, you could lock up some bitcoins for someone that they can only take if they prove they beat you in [Doom](https://www.youtube.com/shorts/IXA1crHYPJE). How awesome would that be! So I started learning about the gameboy's cpu to see if it is feasible to emulate it in bitvm.
