@@ -94,6 +94,9 @@ Here it is in binary (with the 15th byte of RAM initialized to 252, not document
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0]
 ```
 
+# Big caveat
+This cpu only has 16 bytes of ram. Don't expect to be validating bitcoin signatures or syncing a light client in it -- 16 bytes of ram isn't enough for anything but proofs-of-concept. You can demonstrate that bitvm is turing complete (and therefore so is bitcoin, since bitvm is a layer of bitcoin) but you probably can't do anything useful til someone makes a better cpu for bitvm with more ram. Consider that a challenge -- both the "make a better one" part and the "you can't do anything useful with this" part. I'd love to be proven wrong about that last one!
+
 # What was your inspiration?
 I had several inspirations. One of them came from making fun of ethereum's virtual machine one day. I joked that it isn't powerful enough to be a "world computer" (as some of the early hype claimed it was) because it only has about as much processing power as a gameboy. And then I realized that's not something to scoff at, that's super cool. And how cool would it be if *I* can emulate the original gameboy's cpu in bitvm and give people a way to validate whether someone successfully ran a gameboy ROM on bitcoin. If that's possible, you could lock up some bitcoins for someone that they can only take if they prove they beat you in [Doom](https://www.youtube.com/shorts/IXA1crHYPJE). How awesome would that be! So I started learning about the gameboy's cpu to see if it is feasible to emulate it in bitvm.
 
