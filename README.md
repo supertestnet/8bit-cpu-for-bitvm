@@ -12,6 +12,7 @@ However, all of that assumes you can do something useful in only one clock cycle
 I hope to write some javascript to automate that so I can produce a version of the cpu that runs for like a thousand cycles or something, and I'll also need to write some javascript to decode bytes of RAM from 1s and 0s into something a human can understand -- like sprites on a screen, or text on a command prompt. Then I will need to document how to write and test programs for this cpu and show some examples that will hopefully inspire creativity in others to find out the limits of this cpu, or even make a better one.
 
 # Supported commands
+```
 0. NOP -- do nothing
 1. LDA -- load a value from ram into register A
 2. ADD -- put the sum of registers A and B in register A
@@ -21,6 +22,7 @@ I hope to write some javascript to automate that so I can produce a version of t
 6. JMP -- jump to another instruction
 7. JIC -- jump to another instruction if the carry bit is set, that is, if register A overflowed during computation of the previous instruction (this allows for "bounded loops" so that the cpu can run a loop for X number of times and then break out of it)
 8. HLT -- stop the computer (must be entered twice)
+```
 
 # Sample programs
 
@@ -38,6 +40,15 @@ ADD 15
 STA 14
 JMP 3
 ```
+
+**Explanation of the above program**
+
+`LDI 3` - initialize register A with the value 3
+`STA 15` - then store that in byte 15 of ram
+`LDI 0` - then reset A to 0
+`ADD 15` - then add whatever is in byte 15 of ram to A (so add 3+0)
+`STA 14` - then store whatever is in A in byte 14 of ram
+`JMP 3` - go back to ADD 15 and loop
 
 Here is the binary:
 
@@ -60,7 +71,20 @@ JIC 6
 JMP 3
 STA 15
 HLT
+HLT
 ```
+
+**Explanation of the above program**
+
+`LDI 1` - initialize register A with the value 1
+`STA 14` - then store that in byte 14 of ram
+`LDA 15` - then put whatever is in byte 15 of ram in A (this makes it 252 because I booted the cpu with byte 15 already set to 252)
+`ADD 14` - then add whatever is in byte 14 of ram to A (so add 252+1)
+`JIC 6` - if the carry bit is set (i.e. if A overflowed) jump to the 7th instruction (which, counting from 0, is instruction 6)
+`JMP 3` - go back to ADD 14 and loop (this instruction gets skipped once the A register overflows, thus letting us break out of the loop)
+`STA 15` - then store whatever is in A in byte 15 of ram
+`HLT` - this stops the computer
+`HLT` - but it needs to be repeated twice because I'm not very good at making computers yet
 
 Here it is in binary (with the 15th byte of RAM initialized to 252, not documented in the Assembly code)
 
