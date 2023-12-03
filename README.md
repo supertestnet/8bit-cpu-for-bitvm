@@ -20,7 +20,7 @@ I hope to write some javascript to automate that so I can produce a version of t
 4. STA -- store register A in ram
 5. LDI -- load a value directly into register A (not from ram)
 6. JMP -- jump to another instruction
-7. JIC -- jump to another instruction if the carry bit is set, that is, if register A overflowed during computation of the previous instruction (this allows for "bounded loops" so that the cpu can run a loop for X number of times and then break out of it)
+7. JIC -- jump to another instruction if the carry bit is set, that is, if register A overflowed while computing a previous instruction (this allows for "bounded loops" so that the cpu can run a loop for X number of times and then break out of it)
 8. HLT -- stop the computer (must be entered twice)
 ```
 
