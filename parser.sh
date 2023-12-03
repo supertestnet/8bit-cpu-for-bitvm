@@ -38,6 +38,7 @@ printf \
 "${json[132]}${json[133]}${json[134]}${json[135]}${json[136]}${json[137]}${json[138]}${json[139]}\n"\
 "${json[140]}${json[141]}${json[142]}${json[143]}${json[144]}${json[145]}${json[146]}${json[147]}\n"\
 "${json[148]}${json[149]}${json[150]}${json[151]}${json[152]}${json[153]}${json[154]}${json[155]}\n"\
-"${json[156]}${json[157]}${json[158]}${json[159]}${json[160]}${json[161]}${json[162]}${json[163]}\n"\
-"bus\n"\
-"${json[164]}${json[165]}${json[166]}${json[167]}${json[168]}${json[169]}${json[170]}${json[171]}\n"
+"${json[156]}${json[157]}${json[158]}${json[159]}${json[160]}${json[161]}${json[162]}${json[163]}\n"
+# for debugging, uncomment the last 2 lines and add a backslash at the end of the one just above this comment
+# "bus\n"\
+# "${json[164]}${json[165]}${json[166]}${json[167]}${json[168]}${json[169]}${json[170]}${json[171]}\n"
