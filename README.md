@@ -24,6 +24,8 @@ I hope to write some javascript to automate that so I can produce a version of t
 8. HLT -- stop the computer (must be entered twice)
 ```
 
+Commands 1, 4, 5, and 6 take parameters. After specifying the command, give a number 0-15. Commands 1 and 4 use this number to set the ram to that byte, which it then loads into A (LDA) or overwrites with the contents of A (STA). Command 5 puts the number you specify directly into register A (usually it's a 1 or a 0 but it can be anything from 0 to 15). Commands 6 and 7 uses this number to determine which Assembly instruction you want it to jump to.
+
 # Sample programs
 
 ## Count forever
