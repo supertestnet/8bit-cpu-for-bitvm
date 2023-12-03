@@ -45,12 +45,12 @@ JMP 3
 
 **Explanation of the above program**
 
-`LDI 3` - initialize register A with the value 3
-`STA 15` - then store that in byte 15 of ram
-`LDI 0` - then reset A to 0
-`ADD 15` - then add whatever is in byte 15 of ram to A (so add 3+0)
-`STA 14` - then store whatever is in A in byte 14 of ram
-`JMP 3` - go back to ADD 15 and loop
+0. `LDI 3` - initialize register A with the value 3
+1. `STA 15` - then store that in byte 15 of ram
+2. `LDI 0` - then reset A to 0
+3. `ADD 15` - then add whatever is in byte 15 of ram to A (so add 3+0)
+4. `STA 14` - then store whatever is in A in byte 14 of ram
+5. `JMP 3` - go back to ADD 15 and loop
 
 Here is the binary:
 
@@ -78,15 +78,15 @@ HLT
 
 **Explanation of the above program**
 
-`LDI 1` - initialize register A with the value 1
-`STA 14` - then store that in byte 14 of ram
-`LDA 15` - then put whatever is in byte 15 of ram in A (this makes it 252 because I booted the cpu with byte 15 already set to 252)
-`ADD 14` - then add whatever is in byte 14 of ram to A (so add 252+1)
-`JIC 6` - if the carry bit is set (i.e. if A overflowed) jump to the 7th instruction (which, counting from 0, is instruction 6)
-`JMP 3` - go back to ADD 14 and loop (this instruction gets skipped once the A register overflows, thus letting us break out of the loop)
-`STA 15` - then store whatever is in A in byte 15 of ram
-`HLT` - this stops the computer
-`HLT` - but it needs to be repeated twice because I'm not very good at making computers yet
+0. `LDI 1` - initialize register A with the value 1
+1. `STA 14` - then store that in byte 14 of ram
+2. `LDA 15` - then put whatever is in byte 15 of ram in A (this makes it 252 because I booted the cpu with byte 15 already set to 252)
+3. `ADD 14` - then add whatever is in byte 14 of ram to A (so add 252+1)
+4. `JIC 6` - if the carry bit is set (i.e. if A overflowed) jump to the 7th instruction (which, counting from 0, is instruction 6)
+5. `JMP 3` - go back to ADD 14 and loop (this instruction gets skipped once the A register overflows, thus letting us break out of the loop)
+6. `STA 15` - then store whatever is in A in byte 15 of ram
+7. `HLT` - this stops the computer
+8. `HLT` - but it needs to be repeated twice because I'm not very good at making computers yet
 
 Here it is in binary (with the 15th byte of RAM initialized to 252, not documented in the Assembly code)
 
