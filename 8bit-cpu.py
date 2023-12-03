@@ -14,7 +14,6 @@ PC2 = c.gate(op.id_, is_input=True)
 PC1 = c.gate(op.id_, is_input=True)
 PC0 = c.gate(op.id_, is_input=True)
 #microinstruction counter
-MC2 = c.gate(op.id_, is_input=True)
 MC1 = c.gate(op.id_, is_input=True)
 MC0 = c.gate(op.id_, is_input=True)
 #memory address regiser
@@ -196,19 +195,10 @@ RAM_15_1 = c.gate(op.id_, is_input=True)
 #time definer
 inverted_MC0 = c.gate(op.not_, [MC0])
 inverted_MC1 = c.gate(op.not_, [MC1])
-inverted_MC2 = c.gate(op.not_, [MC2])
-MC_DEF_NOR_0 = c.gate(op.nor_, [MC0, MC1])
-MC_DEF_AND_0 = c.gate(op.and_, [MC_DEF_NOR_0, inverted_MC2])
-T0 = c.gate(op.and_, [MC_DEF_NOR_0, MC_DEF_AND_0])
-MC_DEF_AND_1 = c.gate(op.and_, [MC0, inverted_MC1])
-MC_DEF_AND_2 = c.gate(op.and_, [MC_DEF_AND_1, inverted_MC2])
-T1 = c.gate(op.and_, [MC_DEF_AND_1, MC_DEF_AND_2])
-MC_DEF_AND_3 = c.gate(op.and_, [inverted_MC0, MC1])
-MC_DEF_AND_4 = c.gate(op.and_, [MC_DEF_AND_3, inverted_MC2])
-T2 = c.gate(op.and_, [MC_DEF_AND_3, MC_DEF_AND_4])
-MC_DEF_AND_5 = c.gate(op.and_, [MC0, MC1])
-MC_DEF_AND_6 = c.gate(op.and_, [MC_DEF_AND_5, inverted_MC2])
-T3 = c.gate(op.and_, [MC_DEF_AND_5, MC_DEF_AND_6])
+T0 = c.gate(op.nand_, [MC0, MC1])
+T1 = c.gate(op.and_, [MC0, inverted_MC1])
+T2 = c.gate(op.and_, [inverted_MC0, MC1])
+T3 = c.gate(op.and_, [MC0, MC1])
 
 #instruction register interpreter | Assembly decoder
 inverted_IR8 = c.gate(op.not_, [IR8])
@@ -307,8 +297,8 @@ inverted_bus_to_B = c.gate(op.not_, [bus_to_B])
 #gate -- but if either one ends up being set by
 #more complex logic, this might need to change
 #inverted_increment_pc = inverted_bus_to_ir
-#mc_reset = MC2
-#inverted_mc_reset = inverted_MC2
+mc_reset = c.gate(op.and_, [MC0, MC1])
+inverted_mc_reset = c.gate(op.not_, [mc_reset])
 #counter_to_bus = T0
 inverted_counter_to_bus = c.gate(op.not_, [T0])
 bus_to_counter_AND_0 = c.gate(op.and_, [T2, JMP])
@@ -1191,21 +1181,10 @@ PC_3_OUT = c.gate(op.or_, [JUMP_MUX_AND_6, JUMP_MUX_AND_7])
 
 #microinstruction counter incrementer
 MC_1_MUX = c.gate(op.xor_, [MC0, MC1])
-MC_INC_AND_0 = c.gate(op.and_, [MC0, MC1])
-MC_2_MUX = c.gate(op.xor_, [MC_INC_AND_0, MC2])
 
 #microinstruction reset -- these reset the
 #counter if the mc_reset bit is on
-#inverted_mc_reset = inverted_MC2
-MC_RES_AND_0 = c.gate(op.and_, [inverted_MC2, MC2])
-MC_RES_AND_1 = c.gate(op.and_, [inverted_MC2, inverted_MC0])
-MC_0_HALTER = c.gate(op.or_, [MC_RES_AND_0, MC_RES_AND_1])
-MC_RES_AND_2 = c.gate(op.and_, [inverted_MC2, MC2])
-MC_RES_AND_3 = c.gate(op.and_, [inverted_MC2, MC_1_MUX])
-MC_1_HALTER = c.gate(op.or_, [MC_RES_AND_2, MC_RES_AND_3])
-MC_RES_AND_4 = c.gate(op.and_, [inverted_MC2, MC2])
-MC_RES_AND_5 = c.gate(op.and_, [inverted_MC2, MC_2_MUX])
-MC_2_HALTER = c.gate(op.or_, [MC_RES_AND_4, MC_RES_AND_5])
+MC_0_HALTER = c.gate(op.and_, [inverted_mc_reset, inverted_MC0])
 
 #microinstruction halter -- these stop the
 #counter from incrementing if the halt bit is set
@@ -1213,11 +1192,8 @@ MC_HLT_AND_0 = c.gate(op.and_, [HLT, MC0])
 MC_HLT_AND_1 = c.gate(op.and_, [inverted_halt, MC_0_HALTER])
 MC_0_OUT = c.gate(op.or_, [MC_HLT_AND_0, MC_HLT_AND_1])
 MC_HLT_AND_2 = c.gate(op.and_, [HLT, MC1])
-MC_HLT_AND_3 = c.gate(op.and_, [inverted_halt, MC_1_HALTER])
+MC_HLT_AND_3 = c.gate(op.and_, [inverted_halt, MC_1_MUX])
 MC_1_OUT = c.gate(op.or_, [MC_HLT_AND_2, MC_HLT_AND_3])
-MC_HLT_AND_4 = c.gate(op.and_, [HLT, MC2])
-MC_HLT_AND_5 = c.gate(op.and_, [inverted_halt, MC_2_HALTER])
-MC_2_OUT = c.gate(op.or_, [MC_HLT_AND_4, MC_HLT_AND_5])
 
 #bus_to_B muxes
 BUS_TO_B_AND_0 = c.gate(op.and_, [bus_to_B, BUS_1])
@@ -1994,7 +1970,6 @@ final_PC_3_OUT = c.gate(op.id_, [PC_3_OUT], is_output=True)
 final_PC_2_OUT = c.gate(op.id_, [PC_2_OUT], is_output=True)
 final_PC_1_OUT = c.gate(op.id_, [PC_1_OUT], is_output=True)
 final_PC_0_OUT = c.gate(op.id_, [PC_0_OUT], is_output=True)
-final_MC_2_OUT = c.gate(op.id_, [MC_2_OUT], is_output=True)
 final_MC_1_OUT = c.gate(op.id_, [MC_1_OUT], is_output=True)
 final_MC_0_OUT = c.gate(op.id_, [MC_0_OUT], is_output=True)
 final_M3_OUT = c.gate(op.id_, [M3_OUT], is_output=True)
@@ -2168,12 +2143,12 @@ final_RAM_15_1_out = c.gate(op.id_, [RAM_15_1_out], is_output=True)
 # final_BUS_1_out = c.gate(op.id_, [BUS_1], is_output=True)
 
 #run it like this: ./bin/python 8bit-cpu.py '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]'
-print(c.evaluate(initial_state))
+# print(c.evaluate(initial_state))
 
 #uncomment the following lines, and comment out the evaluate line just above this,
 #to print a bristol circuit file
-# for line in bfcl.circuit(c).emit().split('\n'):
-# 	print(line)
+for line in bfcl.circuit(c).emit().split('\n'):
+	print(line)
 
 '''
 I find the following three commands helpful for running bitvm step by step
@@ -2184,7 +2159,7 @@ newline=$(./bin/python 8bit-cpu.py "$newline2");echo $newline | ./parser.sh
 I find the following line helpful for printing out a bristol circuit when
 the evaluate line is commented out and the bfcl.circuit(c).emit() line
 is uncommented
-./bin/python 8bit-cpu.py "$newline2" > 8bit-cpu.txt
+./bin/python 8bit-cpu.py "$newline" > 8bit-cpu.txt
 '''
 
 '''
@@ -2192,7 +2167,7 @@ var input = [
 //program counter
 0,0,0,0,
 //microinstruction counter
-0,0,0,
+0,0,
 //memory address register
 0,0,0,0,
 //initial carry out
