@@ -2,7 +2,7 @@
 Write bitvm programs without learning circuit diagrams
 
 # What is this?
-This project contains a boolean logic circuit that emulates an 8 bit cpu and can run in bitvm. It also contains a debugger and state machine visualizer I wrote in python. If I can just write a compiler for it, coders will be able to program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
+This project contains a boolean logic circuit that emulates a turing complete 8 bit cpu and can run in bitvm. It also contains a debugger and state machine visualizer I wrote in python. If I can just write a compiler for it, coders will be able to program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
 
 # What is the status?
 Every component of the cpu has been successfully tested. The last thing I successfully tested was a conditional jump instruction I wrote for its Assembly decoder, which makes the cpu turing complete. It currently supports 9 Assembly instructions documented below. So the status is: you can write programs in Assembly (using only the commands it currently supports), store them in RAM, run the computer, read the results it produces, and (I haven't tested this part yet) even lock up some bitcoins so that they can only be unlocked by your counterparty if he or she runs your program with inputs that produce some results you want.
