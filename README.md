@@ -81,7 +81,7 @@ HLT
 0. `LDI 1` - initialize register A with the value 1
 1. `STA 14` - then store that in byte 14 of ram
 2. `LDA 15` - then put whatever is in byte 15 of ram in A (this makes it 252 because I booted the cpu with byte 15 already set to 252)
-3. `ADD 14` - then add whatever is in byte 14 of ram to A (so add 252+1)
+3. `ADD 14` - then add whatever is in byte 14 of ram to A (so add 1+252)
 4. `JIC 6` - if the carry bit is set (i.e. if A overflowed) jump to the 7th instruction (which, counting from 0, is instruction 6)
 5. `JMP 3` - go back to ADD 14 and loop (this instruction gets skipped once the A register overflows, thus letting us break out of the loop)
 6. `STA 15` - then store whatever is in A in byte 15 of ram
