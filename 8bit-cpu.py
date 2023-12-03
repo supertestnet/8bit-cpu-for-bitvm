@@ -2143,12 +2143,12 @@ final_RAM_15_1_out = c.gate(op.id_, [RAM_15_1_out], is_output=True)
 # final_BUS_1_out = c.gate(op.id_, [BUS_1], is_output=True)
 
 #run it like this: ./bin/python 8bit-cpu.py '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]'
-# print(c.evaluate(initial_state))
+print(c.evaluate(initial_state))
 
 #uncomment the following lines, and comment out the evaluate line just above this,
 #to print a bristol circuit file
-for line in bfcl.circuit(c).emit().split('\n'):
-	print(line)
+# for line in bfcl.circuit(c).emit().split('\n'):
+	# print(line)
 
 '''
 I find the following three commands helpful for running bitvm step by step
