@@ -60,7 +60,7 @@ Here is the binary:
 
 ## Bounded loop test
 
-The following program initializes the A register to a high value (252) and then begins enters an incrementation loop, incrementing that register by 1 repeatedly. It would get stuck in that loop forever, except that the JIC instruction causes it to depart the loop with Register A overflows due to being too small to hold the number 256. The JIC flag thus breaks it out of the loop, skipping to an instruction that stores the contents of the A register (which are now 0 due to the overflow) and halts the cpu.
+The following program initializes the A register to a high value (252) and then begins enters an incrementation loop, incrementing that register by 1 repeatedly. It would get stuck in that loop forever, except that the JIC instruction causes it to depart the loop when Register A overflows due to being too small to hold the number 256. The JIC flag thus breaks it out of the loop, skipping to an instruction that stores the contents of the A register (which are now 0 due to the overflow) and halts the cpu.
 
 Here it is in Assembly:
 
