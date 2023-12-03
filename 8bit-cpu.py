@@ -245,7 +245,6 @@ IR_INT_AND_32 = c.gate(op.and_, [IR7, IR8])
 HLT = c.gate(op.and_, [IR_INT_AND_31, IR_INT_AND_32])
 
 #bus flags and other flags
-halt = HLT
 inverted_halt = c.gate(op.not_, [HLT])
 bus_to_mem_AND_0 = c.gate(op.and_, [T2, ADD])
 bus_to_mem_AND_1 = c.gate(op.and_, [T2, STA])
@@ -279,7 +278,7 @@ ir_to_bus_AND_6 = c.gate(op.and_, [T2, JIC])
 ir_to_bus_OR_4 = c.gate(op.or_, [ir_to_bus_OR_2, ir_to_bus_AND_6])
 ir_to_bus = c.gate(op.or_, [ir_to_bus_OR_3, ir_to_bus_OR_4])
 inverted_ir_to_bus = c.gate(op.not_, [ir_to_bus])
-bus_to_ir = T1
+#bus_to_ir = T1
 inverted_bus_to_ir = c.gate(op.not_, [T1])
 bus_to_A_AND_0 = c.gate(op.and_, [T3, LDA])
 bus_to_A_AND_1 = c.gate(op.and_, [T2, LDI])
@@ -297,7 +296,7 @@ bus_to_B_AND_0 = c.gate(op.and_, [T3, ADD])
 bus_to_B_AND_1 = c.gate(op.and_, [T3, SUB])
 bus_to_B = c.gate(op.or_, [bus_to_B_AND_0, bus_to_B_AND_1])
 inverted_bus_to_B = c.gate(op.not_, [bus_to_B])
-increment_pc = T1
+#increment_pc = T1
 #TODO: this might change so keep the todo around
 #so I can find it later if change is needed --
 #it might change because right now increment_pc
@@ -307,11 +306,11 @@ increment_pc = T1
 #the valueof an existing inverted version of that
 #gate -- but if either one ends up being set by
 #more complex logic, this might need to change
-inverted_increment_pc = inverted_bus_to_ir
-mc_reset = MC2
-inverted_mc_reset = inverted_MC2
-counter_to_bus = T0
-inverted_counter_to_bus = c.gate(op.not_, [counter_to_bus])
+#inverted_increment_pc = inverted_bus_to_ir
+#mc_reset = MC2
+#inverted_mc_reset = inverted_MC2
+#counter_to_bus = T0
+inverted_counter_to_bus = c.gate(op.not_, [T0])
 bus_to_counter_AND_0 = c.gate(op.and_, [T2, JMP])
 bus_to_counter_AND_1 = c.gate(op.and_, [T2, JIC])
 bus_to_counter = c.gate(op.or_, [bus_to_counter_AND_0, bus_to_counter_AND_1])
@@ -1017,21 +1016,21 @@ PC_3_MUX_0 = c.gate(op.xor_, [PC_INC_AND_2, PC3])
 
 #PC stopper -- these muxes stop the counter from
 #incrementing unless the increment_pc bit is set
-PC_MUX_0_AND_0 = c.gate(op.and_, [PC_0_MUX_0, increment_pc])
-PC_MUX_0_AND_1 = c.gate(op.and_, [PC0, inverted_increment_pc])
+PC_MUX_0_AND_0 = c.gate(op.and_, [PC_0_MUX_0, T1])
+PC_MUX_0_AND_1 = c.gate(op.and_, [PC0, inverted_bus_to_ir])
 PC_0_MUX_1 = c.gate(op.or_, [PC_MUX_0_AND_0, PC_MUX_0_AND_1])
-PC_MUX_0_AND_2 = c.gate(op.and_, [PC_1_MUX_0, increment_pc])
-PC_MUX_0_AND_3 = c.gate(op.and_, [PC1, inverted_increment_pc])
+PC_MUX_0_AND_2 = c.gate(op.and_, [PC_1_MUX_0, T1])
+PC_MUX_0_AND_3 = c.gate(op.and_, [PC1, inverted_bus_to_ir])
 PC_1_MUX_1 = c.gate(op.or_, [PC_MUX_0_AND_2, PC_MUX_0_AND_3])
-PC_MUX_0_AND_4 = c.gate(op.and_, [PC_2_MUX_0, increment_pc])
-PC_MUX_0_AND_5 = c.gate(op.and_, [PC2, inverted_increment_pc])
+PC_MUX_0_AND_4 = c.gate(op.and_, [PC_2_MUX_0, T1])
+PC_MUX_0_AND_5 = c.gate(op.and_, [PC2, inverted_bus_to_ir])
 PC_2_MUX_1 = c.gate(op.or_, [PC_MUX_0_AND_4, PC_MUX_0_AND_5])
-PC_MUX_0_AND_6 = c.gate(op.and_, [PC_3_MUX_0, increment_pc])
-PC_MUX_0_AND_7 = c.gate(op.and_, [PC3, inverted_increment_pc])
+PC_MUX_0_AND_6 = c.gate(op.and_, [PC_3_MUX_0, T1])
+PC_MUX_0_AND_7 = c.gate(op.and_, [PC3, inverted_bus_to_ir])
 PC_3_MUX_1 = c.gate(op.or_, [PC_MUX_0_AND_6, PC_MUX_0_AND_7])
 
 #bus1
-BUS_1_AND_0 = c.gate(op.and_, [counter_to_bus, PC_0_MUX_1])
+BUS_1_AND_0 = c.gate(op.and_, [T0, PC_0_MUX_1])
 BUS_1_AND_1 = c.gate(op.and_, [inverted_ram_to_bus, BUS_1_AND_0])
 BUS_1_AND_2 = c.gate(op.and_, [ram_to_bus, ram_to_bus_1])
 BUS_1_OR_0 = c.gate(op.or_, [BUS_1_AND_1, BUS_1_AND_2])
@@ -1045,7 +1044,7 @@ BUS_1_AND_6 = c.gate(op.and_, [BUS_1_OR_2, BUS_1_OR_1])
 BUS_1 = c.gate(op.or_, [BUS_1_AND_5, BUS_1_AND_6])
 
 #bus2
-BUS_2_AND_0 = c.gate(op.and_, [counter_to_bus, PC_1_MUX_1])
+BUS_2_AND_0 = c.gate(op.and_, [T0, PC_1_MUX_1])
 BUS_2_AND_1 = c.gate(op.and_, [inverted_ram_to_bus, BUS_2_AND_0])
 BUS_2_AND_2 = c.gate(op.and_, [ram_to_bus, ram_to_bus_2])
 BUS_2_OR_0 = c.gate(op.or_, [BUS_2_AND_1, BUS_2_AND_2])
@@ -1059,7 +1058,7 @@ BUS_2_AND_6 = c.gate(op.and_, [BUS_2_OR_2, BUS_2_OR_1])
 BUS_2 = c.gate(op.or_, [BUS_2_AND_5, BUS_2_AND_6])
 
 #bus3
-BUS_3_AND_0 = c.gate(op.and_, [counter_to_bus, PC_2_MUX_1])
+BUS_3_AND_0 = c.gate(op.and_, [T0, PC_2_MUX_1])
 BUS_3_AND_1 = c.gate(op.and_, [inverted_ram_to_bus, BUS_3_AND_0])
 BUS_3_AND_2 = c.gate(op.and_, [ram_to_bus, ram_to_bus_3])
 BUS_3_OR_0 = c.gate(op.or_, [BUS_3_AND_1, BUS_3_AND_2])
@@ -1073,7 +1072,7 @@ BUS_3_AND_6 = c.gate(op.and_, [BUS_3_OR_2, BUS_3_OR_1])
 BUS_3 = c.gate(op.or_, [BUS_3_AND_5, BUS_3_AND_6])
 
 #bus4
-BUS_4_AND_0 = c.gate(op.and_, [counter_to_bus, PC_3_MUX_1])
+BUS_4_AND_0 = c.gate(op.and_, [T0, PC_3_MUX_1])
 BUS_4_AND_1 = c.gate(op.and_, [inverted_ram_to_bus, BUS_4_AND_0])
 BUS_4_AND_2 = c.gate(op.and_, [ram_to_bus, ram_to_bus_4])
 BUS_4_OR_0 = c.gate(op.or_, [BUS_4_AND_1, BUS_4_AND_2])
@@ -1136,28 +1135,28 @@ BUS_8 = c.gate(op.or_, [BUS_8_AND_5, BUS_8_AND_6])
 
 #IR muxes -- these determine whether the IR contains
 #its initial value or whatever is one the bus
-IR_OUT_AND_0 = c.gate(op.and_, [BUS_1, bus_to_ir])
+IR_OUT_AND_0 = c.gate(op.and_, [BUS_1, T1])
 IR_OUT_AND_1 = c.gate(op.and_, [IR1, inverted_bus_to_ir])
 IR_1_out = c.gate(op.or_, [IR_OUT_AND_0, IR_OUT_AND_1])
-IR_OUT_AND_2 = c.gate(op.and_, [BUS_2, bus_to_ir])
+IR_OUT_AND_2 = c.gate(op.and_, [BUS_2, T1])
 IR_OUT_AND_3 = c.gate(op.and_, [IR2, inverted_bus_to_ir])
 IR_2_out = c.gate(op.or_, [IR_OUT_AND_2, IR_OUT_AND_3])
-IR_OUT_AND_4 = c.gate(op.and_, [BUS_3, bus_to_ir])
+IR_OUT_AND_4 = c.gate(op.and_, [BUS_3, T1])
 IR_OUT_AND_5 = c.gate(op.and_, [IR3, inverted_bus_to_ir])
 IR_3_out = c.gate(op.or_, [IR_OUT_AND_4, IR_OUT_AND_5])
-IR_OUT_AND_6 = c.gate(op.and_, [BUS_4, bus_to_ir])
+IR_OUT_AND_6 = c.gate(op.and_, [BUS_4, T1])
 IR_OUT_AND_7 = c.gate(op.and_, [IR4, inverted_bus_to_ir])
 IR_4_out = c.gate(op.or_, [IR_OUT_AND_6, IR_OUT_AND_7])
-IR_OUT_AND_8 = c.gate(op.and_, [BUS_5, bus_to_ir])
+IR_OUT_AND_8 = c.gate(op.and_, [BUS_5, T1])
 IR_OUT_AND_9 = c.gate(op.and_, [IR5, inverted_bus_to_ir])
 IR_5_out = c.gate(op.or_, [IR_OUT_AND_8, IR_OUT_AND_9])
-IR_OUT_AND_10 = c.gate(op.and_, [BUS_6, bus_to_ir])
+IR_OUT_AND_10 = c.gate(op.and_, [BUS_6, T1])
 IR_OUT_AND_11 = c.gate(op.and_, [IR6, inverted_bus_to_ir])
 IR_6_out = c.gate(op.or_, [IR_OUT_AND_10, IR_OUT_AND_11])
-IR_OUT_AND_12 = c.gate(op.and_, [BUS_7, bus_to_ir])
+IR_OUT_AND_12 = c.gate(op.and_, [BUS_7, T1])
 IR_OUT_AND_13 = c.gate(op.and_, [IR7, inverted_bus_to_ir])
 IR_7_out = c.gate(op.or_, [IR_OUT_AND_12, IR_OUT_AND_13])
-IR_OUT_AND_14 = c.gate(op.and_, [BUS_8, bus_to_ir])
+IR_OUT_AND_14 = c.gate(op.and_, [BUS_8, T1])
 IR_OUT_AND_15 = c.gate(op.and_, [IR8, inverted_bus_to_ir])
 IR_8_out = c.gate(op.or_, [IR_OUT_AND_14, IR_OUT_AND_15])
 
@@ -2172,9 +2171,23 @@ final_RAM_15_1_out = c.gate(op.id_, [RAM_15_1_out], is_output=True)
 #run it like this: ./bin/python 8bit-cpu.py '[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]'
 print(c.evaluate(initial_state))
 
+#uncomment the following lines, and comment out the evaluate line just above this,
+#to print a bristol circuit file
 # for line in bfcl.circuit(c).emit().split('\n'):
 	# print(line)
 
+'''
+I find the following three commands helpful for running bitvm step by step
+newline='[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0]'
+newline2=$(./bin/python 8bit-cpu.py "$newline");echo $newline2 | ./parser.sh
+newline=$(./bin/python 8bit-cpu.py "$newline2");echo $newline | ./parser.sh
+
+I find the following line helpful for printing out a bristol circuit when
+the evaluate line is commented out and the bfcl.circuit(c).emit() line
+is uncommented
+./bin/python 8bit-cpu.py "$newline2" > 8bit-cpu.txt
+'''
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0]
 '''
 var input = [
 //program counter
