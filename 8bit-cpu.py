@@ -1190,7 +1190,6 @@ JUMP_MUX_AND_7 = c.gate(op.and_, [PC_3_MUX_1, inverted_bus_to_counter])
 PC_3_OUT = c.gate(op.or_, [JUMP_MUX_AND_6, JUMP_MUX_AND_7])
 
 #microinstruction counter incrementer
-MC_0_MUX = c.gate(op.id_, [inverted_MC0])
 MC_1_MUX = c.gate(op.xor_, [MC0, MC1])
 MC_INC_AND_0 = c.gate(op.and_, [MC0, MC1])
 MC_2_MUX = c.gate(op.xor_, [MC_INC_AND_0, MC2])
@@ -1199,7 +1198,7 @@ MC_2_MUX = c.gate(op.xor_, [MC_INC_AND_0, MC2])
 #counter if the mc_reset bit is on
 #inverted_mc_reset = inverted_MC2
 MC_RES_AND_0 = c.gate(op.and_, [inverted_MC2, MC2])
-MC_RES_AND_1 = c.gate(op.and_, [inverted_MC2, MC_0_MUX])
+MC_RES_AND_1 = c.gate(op.and_, [inverted_MC2, inverted_MC0])
 MC_0_HALTER = c.gate(op.or_, [MC_RES_AND_0, MC_RES_AND_1])
 MC_RES_AND_2 = c.gate(op.and_, [inverted_MC2, MC2])
 MC_RES_AND_3 = c.gate(op.and_, [inverted_MC2, MC_1_MUX])
@@ -2174,7 +2173,7 @@ print(c.evaluate(initial_state))
 #uncomment the following lines, and comment out the evaluate line just above this,
 #to print a bristol circuit file
 # for line in bfcl.circuit(c).emit().split('\n'):
-	# print(line)
+# 	print(line)
 
 '''
 I find the following three commands helpful for running bitvm step by step
@@ -2187,7 +2186,7 @@ the evaluate line is commented out and the bfcl.circuit(c).emit() line
 is uncommented
 ./bin/python 8bit-cpu.py "$newline2" > 8bit-cpu.txt
 '''
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0]
+
 '''
 var input = [
 //program counter
