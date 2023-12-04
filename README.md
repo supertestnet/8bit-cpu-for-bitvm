@@ -15,6 +15,8 @@ However, all of that assumes you can do something useful in only one clock cycle
 
 I hope to write some javascript to automate that so I can produce a version of the cpu that runs for like a thousand cycles or something, and I'll also need to write some javascript to decode bytes of RAM from 1s and 0s into something a human can understand -- like sprites on a screen, or text on a command prompt. Then I will need to document how to write and test programs for this cpu and show some examples that will hopefully inspire creativity in others to find out the limits of this cpu, or even make a better one.
 
+Also, there is currently no way to actually run these programs on bitcoin, the simulator only runs in the browser and offline -- but the programs truly are compatible with bitvm, they really are! I hope to add a button soon that lets you export your program in a bitcoin address so you can use it the way bitvm is intended.
+
 # Supported commands
 ```
 0. NOP -- do nothing
