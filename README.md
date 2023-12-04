@@ -49,12 +49,12 @@ Here it is in Assembly:
 
 **Explanation of the above program**
 
-0. `LDI 3` - initialize register A with the value 3
-1. `STA 15` - then store that in byte 15 of ram
-2. `LDI 0` - then reset A to 0
-3. `ADD 15` - then add whatever is in byte 15 of ram to A (so add 3+0)
-4. `STA 14` - then store whatever is in A in byte 14 of ram
-5. `JMP 3` - go back to ADD 15 and loop
+1. `LDI 0` - initialize A to 0
+2. `ADD 15` - then add whatever is in byte 15 of ram to A
+3. `STA 14` - then store whatever is in A in byte 14 of ram
+4. `JMP 1` - go back to ADD 15 and loop
+5. .org 15 - this tells the compiler to initialize byte 15 to a certain value
+6. .word 3 - this tells the compiler what value to initialize the previously-referenced byte to
 
 Here is the binary:
 
