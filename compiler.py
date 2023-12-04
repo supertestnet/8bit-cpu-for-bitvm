@@ -10,7 +10,6 @@ commands = { b"NOP":0b00000000, b"LDA":0b00010000, b"ADD":0b00100000,
 
 parsed = []
 labels = {}
-prebin = []
 binary = []
 filename = []
 
@@ -97,17 +96,16 @@ def lex(args):
     scale = 16 ## equals to hexadecimal
     num_of_bits = 8
     mybin = bin(int(my_hexdata, scale))[2:].zfill(num_of_bits)
-    # f.write(program.read())
-    # f.write(mybin)
-    prebin.append( mybin );
     if len( mybin ) > 128:
       raise(Exception( "Your program is too big, ensure it contains a maximum of 16 bytes" ) )
-    padded = mybin.zfill(163)
+    offby = len( mybin ) % 8
+    padded1 = mybin.zfill( len( mybin ) + ( 8 - offby ) )
+    padded2 = padded1.ljust( 128, "0" )
+    padded = padded2.zfill(163)
     objectified = [*padded]
     better_object = []
     for x in objectified:
       better_object.append( int( x ) )
-    # mybytes = str.encode(mybin)
     mybytes = str.encode( str( better_object ) )
     binary.append( better_object )
     f.write(mybytes)
