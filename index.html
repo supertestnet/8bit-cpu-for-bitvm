@@ -218,7 +218,7 @@
   .org 15
   .word 1</div>
             <p>
-                If you ran this code through the compiler and then executed the binary, the computer would add the number 1 to register A -- yay, progress! Whenever this computer finishes an operation, it increments the memory register at the next byte of ram in expectation of another command. So after running lines 0 and 1 (LDI 0 and ADD 15) it would increment the memory register to byte 3 of ram.
+                If you ran this code through the compiler and then executed the binary, the computer would add the number 1 to register A -- yay, progress! Whenever this computer finishes an operation, it increments the memory register to the next byte of ram in expectation of another command. So after running lines 0 and 1 (LDI 0 and ADD 15) it would increment the memory register to byte 3 of ram.
             </p>
             <p>
                 There is nothing there, which means that byte of ram is all 0s, and this computer interprets all 0s as the default operation: NOP or "no operation," where it does nothing. Then, since there is no HLT (halt) command, it would try to run the command in the next byte of ram (byte 4), which is empty again so it's another NOP, and so on, all the way til it gets to byte 15. That one is not empty, it contains the number 1. However, only the first four bits of RAM are interpreted as an instruction, the others are used to set the argument of 0 through 15. But the first four bits of byte 15 are all 0s so it would still think that's a NOP.
