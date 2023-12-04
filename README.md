@@ -37,7 +37,7 @@ Commands 1-6 take parameters. After specifying the command, give a number 0-15. 
 
 # How to use the compiler
 
-Create a .asm file with your program in it. See the example .asm programs included in this repository for help with getting the syntax right. To test a program, first run the compiler like this:
+Create a .asm file with your program in it. See the example .asm programs included in this repository for help with getting the syntax right. Some of the programs are also explained below, under Sample Programs, in case you have trouble understanding how Assembly works. Also feel free to jump in [our telegram chat](https://t.me/bitvm_chat) and ask for help. To test a program, first run the compiler like this:
 
 ```
 python3 compiler.py my_program.asm -o my_program.bin
