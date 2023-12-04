@@ -22,6 +22,9 @@ I hope to write some javascript to automate that so I can produce a version of t
 6. JMP -- jump to another instruction
 7. JIC -- jump to another instruction if the carry bit is set, that is, if register A overflowed while computing a previous instruction (this allows for "bounded loops" so that the cpu can run a loop for X number of times and then break out of it)
 8. HLT -- stop the computer (actually stops the microinstruction counter from incrementing so that the computer stops changing its state til it runs out of cycles)
+9. .org -- initialize a byte of ram to a certain value (used in combination with .word)
+10. .word -- the value to initialize a byte of ram to (used in combination with .org)
+11. labels -- Assembly lets you name your functions using labels. An example is given in test_program.asm. Named functions can be written once and then called one or more times throughout your program without having to write out the code multiple times.
 ```
 
 Commands 1-6 take parameters. After specifying the command, give a number 0-15. Commands 1, 2, 3, and 4 use this number to set the ram to that byte, which it then loads into A (LDA), adds to A (ADD), subtracts from A (SUB), or overwrites with the contents of A (STA). Command 5 puts the number you specify directly into register A (usually it's a 1 or a 0 but it can be anything from 0 to 15). Commands 6 and 7 use the number you specify to determine which Assembly instruction in your program you want to jump to.
@@ -35,12 +38,13 @@ The following program initializes the A register to 0 and then begins an increme
 Here it is in Assembly:
 
 ```
-LDI 3
-STA 15
-LDI 0
-ADD 15
-STA 14
-JMP 3
+  LDI 0
+  ADD 15
+  STA 14
+  JMP 1
+
+  .org 15
+  .word 3
 ```
 
 **Explanation of the above program**
@@ -55,7 +59,7 @@ JMP 3
 Here is the binary:
 
 ```
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,1,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]
 ```
 
 ## Bounded loop test
@@ -65,14 +69,17 @@ The following program initializes the A register to a high value (252) and then 
 Here it is in Assembly:
 
 ```
-LDI 1
-STA 14
-LDA 15
-ADD 14
-JIC 6
-JMP 3
-STA 15
-HLT
+  LDI 1
+  STA 14
+  LDA 15
+  ADD 14
+  JIC 6
+  JMP 3
+  STA 15
+  HLT
+
+  .org 15
+  .word 252
 ```
 
 **Explanation of the above program**
@@ -85,11 +92,13 @@ HLT
 5. `JMP 3` - go back to ADD 14 and loop (this instruction gets skipped once the A register overflows, thus letting us break out of the loop)
 6. `STA 15` - then store whatever is in A in byte 15 of ram
 7. `HLT` - this stops the computer
+8. .org 15 - this tells the compiler to initialize byte 15 to a certain value
+9. .word 252 - this tells the compiler what value to initialize the previously-referenced byte to
 
 Here it is in binary (with the 15th byte of RAM initialized to 252, not documented in the Assembly code)
 
 ```
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0]
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0]
 ```
 
 # Big caveat
