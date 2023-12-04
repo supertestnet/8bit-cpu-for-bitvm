@@ -21,8 +21,8 @@ Also, there is currently no way to actually run these programs on bitcoin, the s
 ```
 0. NOP -- do nothing
 1. LDA -- load a value from ram into register A
-2. ADD -- put the sum of registers A and B in register A
-3. SUB -- put the difference of registers A and B in register A
+2. ADD -- add the number in whatever byte you specify to the number currently in register A
+3. SUB -- subtract the number in whatever byte you specify from the number currently in register A
 4. STA -- store register A in ram
 5. LDI -- load a value directly into register A (not from ram)
 6. JMP -- jump to another instruction
