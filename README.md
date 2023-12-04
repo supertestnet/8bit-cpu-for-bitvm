@@ -45,16 +45,9 @@ python3 compiler.py my_program.asm -o my_program.bin
 
 I eventually plan to let you upload the .bin file the compiler generates, but for right now I made the compiler also spit out a copy/pastable version of the binary. Enter that into the online demo page [here](https://supertestnet.github.io/8bit-cpu-for-bitvm/) -- just click "Use your own," then begin incrementing the clock, and watch as your program runs in the computer.
 
-#Compiler caveats
+# Compiler caveats
 
-The compiler is slightly modified from this project: https://github.com/tayler6000/BenEater8BitAssembler It was originally written for a different computer so I had to modify it to get it to work with this one. Possibly due to my modifications, there is a compatibility issue between the compiler and this computer. If your program does not specify an initial value for the last byte of ram, your program will probably compile into a binary incorrectly. I recommend ending all your programs with this:
-
-```
-  .org 15
-  .word 0
-```
-
-That should ensure it works correctly, unless your program needs to fill every byte of RAM with commands, in which case you can fix it by figuring out the equivalent binary value for your last command and then initializing byte 15 to that. If you need help, ask in the bitvm builders telegram chatroom: https://t.me/bitvm_chat
+The compiler is slightly modified from this project: https://github.com/tayler6000/BenEater8BitAssembler It was originally written for a different computer so I had to modify it to get it to work with this one. Due to my modifications, there may be compatibility issues between the compiler and this computer. More testing is needed to determine if it works properly. If you find any bugs, please create an issue on this repository.
 
 Also note that Assembly expects a certain syntax. Almost all lines of your code should be indented with exactly 2 spaces. The only exception is for labels. Labels are not supposed to be indented, they must be only 1 word (but you can use underscores), and they need a colon after them. You can learn more by watching youtube videos about how Assembly works, but remember that Assembly has a lot of instructions in it and this computer only supports the ones documented above, so don't go hog wild with all the crazy sstuff Assembly can do on other computers -- just stick to the things it can do on *this* computer or the compiler will get mad and throw an error.
 
