@@ -2,7 +2,7 @@
 Write bitvm programs without learning circuit diagrams
 
 # What is this?
-This project contains a boolean logic circuit that emulates a turing complete 8 bit cpu that can run in bitvm. It also contains a debugger and state machine visualizer I wrote in python. If I can just write a compiler for it, coders will be able to program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
+This project contains a boolean logic circuit that emulates a turing complete 8 bit cpu that can run in bitvm. It also contains a debugger and state machine visualizer I wrote in bash, and an Assembly compiler someone else wrote in python, and which I modified. Coders can now program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
 
 # How to try it
 
