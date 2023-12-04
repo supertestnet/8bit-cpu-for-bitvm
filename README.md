@@ -35,19 +35,19 @@ Also, there is currently no way to actually run these programs on bitcoin, the s
 
 Commands 1-6 take parameters. After specifying the command, give a number 0-15. Commands 1, 2, 3, and 4 use this number to set the ram to that byte, which it then loads into A (LDA), adds to A (ADD), subtracts from A (SUB), or overwrites with the contents of A (STA). Command 5 puts the number you specify directly into register A (usually it's a 1 or a 0 but it can be anything from 0 to 15). Commands 6 and 7 use the number you specify to determine which Assembly instruction in your program you want to jump to.
 
-# A word about the compiler
+# How to use the compiler
 
-The compiler is slightly modified from this project: https://github.com/tayler6000/BenEater8BitAssembler
-
-To use it, create a .asm file with your program in it, and run the compiler like this:
+Create a .asm file with your program in it. See the example .asm programs included in this repository for help with getting the syntax right. To test a program, first run the compiler like this:
 
 ```
 python3 compiler.py my_program.asm -o my_program.bin
 ```
 
-I eventually plan to let you upload the .bin file the compiler generates, but for right now I made the compiler also spit out a copy/pastable version of the binary so you can enter it into the online demo page [here](https://supertestnet.github.io/8bit-cpu-for-bitvm/) (just click "Use your own").
+I eventually plan to let you upload the .bin file the compiler generates, but for right now I made the compiler also spit out a copy/pastable version of the binary. Enter that into the online demo page [here](https://supertestnet.github.io/8bit-cpu-for-bitvm/) -- just click "Use your own," then begin incrementing the clock, and watch as your program runs in the computer.
 
-The compiler was originally written for a different computer so I had to modify it to get it to work with this one. Possibly due to my modifications, there is a compatibility issue between the compiler and this computer. If your program does not specify an initial value for the last byte of ram, your program will probably compile into a binary incorrectly. I recommend ending all your programs with this:
+#Compiler caveats
+
+The compiler is slightly modified from this project: https://github.com/tayler6000/BenEater8BitAssembler It was originally written for a different computer so I had to modify it to get it to work with this one. Possibly due to my modifications, there is a compatibility issue between the compiler and this computer. If your program does not specify an initial value for the last byte of ram, your program will probably compile into a binary incorrectly. I recommend ending all your programs with this:
 
 ```
   .org 15
