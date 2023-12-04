@@ -216,23 +216,25 @@
                         Here it is in Assembly:
                     </p>
                     <div class="code">
-                        LDI 3<br>
-                        STA 15<br>
                         LDI 0<br>
                         ADD 15<br>
                         STA 14<br>
-                        JMP 3<br>
+                        JMP 1<br>
+                        <br><br>
+                        .org 15<br>
+                        .word 3<br>
                     </div>
                     <p style="font-weight: bold;">
                         Explanation of the above program
                     </p>
                     <div class="code">
-                        LDI 3 - initialize register A with the value 3<br>
-                        STA 15 - then store that in byte 15 of ram<br>
-                        LDI 0 - then reset A to 0<br>
-                        ADD 15 - then add whatever is in byte 15 of ram to A (so add 3+0)<br>
-                        STA 14 - then store whatever is in A in byte 14 of ram<br>
-                        JMP 3 - go back to ADD 15 and loop<br>
+                        0. LDI 0 - initialize register A to 0<br>
+                        1. ADD 15 - then add whatever is in byte 15 of ram to A (so add 3+0)<br>
+                        2. STA 14 - then store whatever is in A in byte 14 of ram<br>
+                        3. JMP 3 - go back to ADD 15 and loop<br>
+                        <br><br>
+                        4. .org 15 - this tells the compiler to initialize byte 15 to a certain value<br>
+                        5. .word 3 - this tells the compiler what value to initialize the previously-referenced byte to<br>
                     </div>
                     <br><br>
                     <button class="next">Increment clock</button>
@@ -279,6 +281,9 @@
                         JMP 3<br>
                         STA 15<br>
                         HLT<br>
+                        <br><br>
+                        .org 15<br>
+                        .word 252<br>
                     </div>
                     <p style="font-weight: bold;">
                         Explanation of the above program
@@ -292,6 +297,9 @@
                         JMP 3 - go back to ADD 14 and loop (this instruction gets skipped once the A register overflows, thus letting us break out of the loop)<br>
                         STA 15 - then store whatever is in A in byte 15 of ram<br>
                         HLT - this stops the computer<br>
+                        <br><br>
+                        .org 15 - this tells the compiler to initialize byte 15 to a certain value
+                        .word 252 - this tells the compiler what value to initialize the previously-referenced byte to
                     </div>
                     <br><br>
                     <button class="next">Increment clock</button>
