@@ -33,7 +33,7 @@ Also, there is currently no way to actually run these programs on bitcoin, the s
 11. labels -- Assembly lets you name your functions using labels. An example is given in test_program.asm. Named functions can be written once and then called one or more times throughout your program without having to write out the code multiple times.
 ```
 
-Commands 1-6 take parameters. After specifying the command, give a number 0-15. Commands 1, 2, 3, and 4 use this number to set the ram to that byte, which it then loads into A (LDA), adds to A (ADD), subtracts from A (SUB), or overwrites with the contents of A (STA). Command 5 puts the number you specify directly into register A (usually it's a 1 or a 0 but it can be anything from 0 to 15). Commands 6 and 7 use the number you specify to determine which Assembly instruction in your program you want to jump to.
+Commands 1-10 (but not 8) take parameters. After specifying the command, give a number 0-15. Commands 1, 2, 3, and 4 use this number to set the ram to that byte, which it then loads into A (LDA), adds to A (ADD), subtracts from A (SUB), or overwrites with the contents of A (STA). Command 5 puts the number you specify directly into register A (usually it's a 1 or a 0 but it can be anything from 0 to 15). Commands 6 and 7 use the number you specify to determine which Assembly instruction in your program you want to jump to. Command 9 uses the number you specify to select a byte of ram so that, with the next command (.word), you can initialize it to a certain value. The .word command uses the number you specifiy to initialize the previously-selected byte of ram to the value of the number you picked.
 
 # How to use the compiler
 
@@ -82,8 +82,8 @@ Here it is in Assembly:
 2. `ADD 15` - then add whatever is in byte 15 of ram to A
 3. `STA 14` - then store whatever is in A in byte 14 of ram
 4. `JMP 1` - go back to ADD 15 and loop
-5. .org 15 - this tells the compiler to initialize byte 15 to a certain value
-6. .word 3 - this tells the compiler what value to initialize the previously-referenced byte to
+5. `.org 15` - this tells the compiler to initialize byte 15 to a certain value
+6. `.word 3` - this tells the compiler what value to initialize the previously-referenced byte to
 
 Here is the binary:
 
@@ -121,8 +121,8 @@ Here it is in Assembly:
 5. `JMP 3` - go back to ADD 14 and loop (this instruction gets skipped once the A register overflows, thus letting us break out of the loop)
 6. `STA 15` - then store whatever is in A in byte 15 of ram
 7. `HLT` - this stops the computer
-8. .org 15 - this tells the compiler to initialize byte 15 to a certain value
-9. .word 252 - this tells the compiler what value to initialize the previously-referenced byte to
+8. `.org 15` - this tells the compiler to initialize byte 15 to a certain value
+9. `.word 252` - this tells the compiler what value to initialize the previously-referenced byte to
 
 Here it is in binary (with the 15th byte of RAM initialized to 252, not documented in the Assembly code)
 
