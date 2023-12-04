@@ -10,6 +10,7 @@ commands = { b"NOP":0b00000000, b"LDA":0b00010000, b"ADD":0b00100000,
 
 parsed = []
 labels = {}
+prebin = []
 binary = []
 filename = []
 
@@ -98,11 +99,17 @@ def lex(args):
     mybin = bin(int(my_hexdata, scale))[2:].zfill(num_of_bits)
     # f.write(program.read())
     # f.write(mybin)
+    prebin.append( mybin );
+    if len( mybin ) > 128:
+      raise(Exception( "Your program is too big, ensure it contains a maximum of 16 bytes" ) )
     padded = mybin.zfill(163)
     objectified = [*padded]
+    better_object = []
+    for x in objectified:
+      better_object.append( int( x ) )
     # mybytes = str.encode(mybin)
-    mybytes = str.encode( str( objectified ) )
-    binary.append( objectified )
+    mybytes = str.encode( str( better_object ) )
+    binary.append( better_object )
     f.write(mybytes)
 
 if __name__ == "__main__":
@@ -113,5 +120,5 @@ if __name__ == "__main__":
   arguments = parser.parse_args()
   parse(arguments)
   lex(arguments)
-  print( f"Done, your binary is in the file {filename[ 0 ]}. Here is a copy in case you want to copy paste it:" )
+  print( f"Done, your binary is in the file {filename[ 0 ]}. Here is a copy in case you want to copy/paste it:" )
   print( binary[ 0 ] )
