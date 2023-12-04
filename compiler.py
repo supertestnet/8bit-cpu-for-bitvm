@@ -10,6 +10,8 @@ commands = { b"NOP":0b00000000, b"LDA":0b00010000, b"ADD":0b00100000,
 
 parsed = []
 labels = {}
+binary = []
+filename = []
 
 def parse(args):
   with open(args.in_file, 'rb') as f:
@@ -87,8 +89,8 @@ def lex(args):
       counter += 1
       continue
   
-  
   with open(args.o, 'wb') as f:
+    filename.append( args.o )
     program.seek(0,0)
     my_hexdata = program.read().hex()
     scale = 16 ## equals to hexadecimal
@@ -100,6 +102,7 @@ def lex(args):
     objectified = [*padded]
     # mybytes = str.encode(mybin)
     mybytes = str.encode( str( objectified ) )
+    binary.append( objectified )
     f.write(mybytes)
 
 if __name__ == "__main__":
@@ -110,4 +113,5 @@ if __name__ == "__main__":
   arguments = parser.parse_args()
   parse(arguments)
   lex(arguments)
-  print("Done.")
+  print( f"Done, your binary is in the file {filename[ 0 ]}. Here is a copy in case you want to copy paste it:" )
+  print( binary[ 0 ] )
