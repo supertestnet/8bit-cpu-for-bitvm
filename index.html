@@ -28,6 +28,9 @@
                 font-size: 1.15rem;
                 border: 1px solid grey;
             }
+            button {
+                margin: .5rem;
+            }
             .hidden {
                 display: none;
             }
@@ -94,6 +97,7 @@
             <button class="next">Increment clock</button>
             <button class="automate_clock">Auto increment clock</button>
             <button class="stop_clock">Stop clock</button>
+            <button class="toggle_decimal">Toggle decimal display</button>
             <h3>
                 Step 3. Learn what in the world is happening
             </h3>
@@ -158,8 +162,14 @@
             <button class="go_back">Go back</button>
         </div>
         <script>
-            var output = '';
+            var output = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
             var stop = true;
+            var show_decimal = 0;
+            $( '.toggle_decimal' ).onclick = () => {
+                show_decimal = INV( show_decimal );
+                console.log( output );
+                $( '.visualizer' ).innerHTML = displayState( output );
+            }
             $( '.use_your_own' ).onclick = () => {
                 $( '.paste_program' ).value = "";
                 $( '.use_your_own_form' ).classList.remove( "hidden" );
@@ -207,9 +217,8 @@
             }
             $( '.load_counting_program' ).onclick = () => {
                 $( '.halted' ).classList.add( "hidden" );
-                var input = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,1,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-                $( '.visualizer' ).innerHTML = displayState( input );
-                output = evalCircuit( circuit, input );
+                output = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,1,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                $( '.visualizer' ).innerHTML = displayState( output );
                 $( '.explainer' ).innerHTML = `
                     <h3 style="margin-top: 0;">Counting program</h3>
                     <p>
@@ -243,6 +252,7 @@
                     <button class="next">Increment clock</button>
                     <button class="automate_clock">Auto increment clock</button>
                     <button class="stop_clock">Stop clock</button>
+                    <button class="toggle_decimal">Toggle decimal display</button>
                     <br><br>
                 `;
                 $$( '.automate_clock' ).forEach( item => {
@@ -261,12 +271,17 @@
                 $$( '.stop_clock' ).forEach( item => {
                     item.onclick = () => stop = true;
                 });
+                $$( '.toggle_decimal' ).forEach( item => {
+                    item.onclick = () => {
+                        show_decimal = INV( show_decimal );
+                        $( '.visualizer' ).innerHTML = displayState( output );
+                    }
+                });
             }
             $( '.load_bounded_loop_test' ).onclick = () => {
                 $( '.halted' ).classList.add( "hidden" );
-                var input = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0];
-                $( '.visualizer' ).innerHTML = displayState( input );
-                output = evalCircuit( circuit, input );
+                output = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0];
+                $( '.visualizer' ).innerHTML = displayState( output );
                 $( '.explainer' ).innerHTML = `
                     <h3 style="margin-top: 0;">Bounded loop test</h3>
                     <p>
@@ -308,6 +323,7 @@
                     <button class="next">Increment clock</button>
                     <button class="automate_clock">Auto increment clock</button>
                     <button class="stop_clock">Stop clock</button>
+                    <button class="toggle_decimal">Toggle decimal display</button>
                     <br><br>
                 `;
                 $$( '.automate_clock' ).forEach( item => {
@@ -325,6 +341,12 @@
                 });
                 $$( '.stop_clock' ).forEach( item => {
                     item.onclick = () => stop = true;
+                });
+                $$( '.toggle_decimal' ).forEach( item => {
+                    item.onclick = () => {
+                        show_decimal = INV( show_decimal );
+                        $( '.visualizer' ).innerHTML = displayState( output );
+                    }
                 });
             }
             $( '.next' ).onclick = () => {
@@ -399,39 +421,81 @@
             }
             var displayState = state => {
                 if ( typeof state == "string" ) state = state.split( "" );
+                var pc_str = `${state[ 0 ]}${state[ 1 ]}${state[ 2 ]}${state[ 3 ]}`;
+                var mc_str = `${state[ 4 ]}${state[ 5 ]}`;
+                var m_str = `${state[ 6 ]}${state[ 7 ]}${state[ 8 ]}${state[ 9 ]}`;
                 var a_str = `${state[ 11 ]}${state[ 12 ]}${state[ 13 ]}${state[ 14 ]}${state[ 15 ]}${state[ 16 ]}${state[ 17 ]}${state[ 18 ]}`;
-                console.log( "reg A:", parseInt( a_str, 2 ) );
+                var b_str = `${state[19]}${state[20]}${state[21]}${state[22]}${state[23]}${state[24]}${state[25]}${state[26]}`;
+                var i_str = `${state[27]}${state[28]}${state[29]}${state[30]}${state[31]}${state[32]}${state[33]}${state[34]}`;
+                var ram00_str = `${state[35]}${state[36]}${state[37]}${state[38]}${state[39]}${state[40]}${state[41]}${state[42]}`;
+                var ram01_str = `${state[43]}${state[44]}${state[45]}${state[46]}${state[47]}${state[48]}${state[49]}${state[50]}`;
+                var ram02_str = `${state[51]}${state[52]}${state[53]}${state[54]}${state[55]}${state[56]}${state[57]}${state[58]}`;
+                var ram03_str = `${state[59]}${state[60]}${state[61]}${state[62]}${state[63]}${state[64]}${state[65]}${state[66]}`;
+                var ram04_str = `${state[67]}${state[68]}${state[69]}${state[70]}${state[71]}${state[72]}${state[73]}${state[74]}`;
+                var ram05_str = `${state[75]}${state[76]}${state[77]}${state[78]}${state[79]}${state[80]}${state[81]}${state[82]}`;
+                var ram06_str = `${state[83]}${state[84]}${state[85]}${state[86]}${state[87]}${state[88]}${state[89]}${state[90]}`;
+                var ram07_str = `${state[91]}${state[92]}${state[93]}${state[94]}${state[95]}${state[96]}${state[97]}${state[98]}`;
+                var ram08_str = `${state[99]}${state[100]}${state[101]}${state[102]}${state[103]}${state[104]}${state[105]}${state[106]}`;
+                var ram09_str = `${state[107]}${state[108]}${state[109]}${state[110]}${state[111]}${state[112]}${state[113]}${state[114]}`;
+                var ram10_str = `${state[115]}${state[116]}${state[117]}${state[118]}${state[119]}${state[120]}${state[121]}${state[122]}`;
+                var ram11_str = `${state[123]}${state[124]}${state[125]}${state[126]}${state[127]}${state[128]}${state[129]}${state[130]}`;
+                var ram12_str = `${state[131]}${state[132]}${state[133]}${state[134]}${state[135]}${state[136]}${state[137]}${state[138]}`;
+                var ram13_str = `${state[139]}${state[140]}${state[141]}${state[142]}${state[143]}${state[144]}${state[145]}${state[146]}`;
+                var ram14_str = `${state[147]}${state[148]}${state[149]}${state[150]}${state[151]}${state[152]}${state[153]}${state[154]}`;
+                var ram15_str = `${state[155]}${state[156]}${state[157]}${state[158]}${state[159]}${state[160]}${state[161]}${state[162]}`;
+                var pc_dec = parseInt( pc_str, 2 );
+                var mc_dec = parseInt( mc_str, 2 );
+                var m_dec = parseInt( m_str, 2 );
+                var a_dec = parseInt( a_str, 2 );
+                var b_dec = parseInt( b_str, 2 );
+                var i_dec = parseInt( i_str, 2 );
+                var ram00_dec = parseInt( ram00_str, 2 );
+                var ram01_dec = parseInt( ram01_str, 2 );
+                var ram02_dec = parseInt( ram02_str, 2 );
+                var ram03_dec = parseInt( ram03_str, 2 );
+                var ram04_dec = parseInt( ram04_str, 2 );
+                var ram05_dec = parseInt( ram05_str, 2 );
+                var ram06_dec = parseInt( ram06_str, 2 );
+                var ram07_dec = parseInt( ram07_str, 2 );
+                var ram08_dec = parseInt( ram08_str, 2 );
+                var ram09_dec = parseInt( ram09_str, 2 );
+                var ram10_dec = parseInt( ram10_str, 2 );
+                var ram11_dec = parseInt( ram11_str, 2 );
+                var ram12_dec = parseInt( ram12_str, 2 );
+                var ram13_dec = parseInt( ram13_str, 2 );
+                var ram14_dec = parseInt( ram14_str, 2 );
+                var ram15_dec = parseInt( ram15_str, 2 );
                 var template = `<p class="cpu_label">program counter</p>
-                <p class="cpu_state">${state[ 0 ]}${state[ 1 ]}${state[ 2 ]}${state[ 3 ]}</p>
+                <p class="cpu_state">${show_decimal ? pc_dec : pc_str}</p>
                 <p class="cpu_label">microinstruction counter</p>
-                <p class="cpu_state">${state[ 4 ]}${state[ 5 ]}</p>
+                <p class="cpu_state">${show_decimal ? mc_dec : mc_str}</p>
                 <p class="cpu_label">memory address register</p>
-                <p class="cpu_state">${state[ 6 ]}${state[ 7 ]}${state[ 8 ]}${state[ 9 ]}</p>
+                <p class="cpu_state">${show_decimal ? m_dec : m_str}</p>
                 <p class="cpu_label">carry flag</p>
                 <p class="cpu_state">${state[ 10 ]}</p>
                 <p class="cpu_label">register A</p>
-                <p class="cpu_state">${state[ 11 ]}${state[ 12 ]}${state[ 13 ]}${state[ 14 ]}${state[ 15 ]}${state[ 16 ]}${state[ 17 ]}${state[ 18 ]}</p>
+                <p class="cpu_state">${show_decimal ? a_dec : a_str}</p>
                 <p class="cpu_label">register B</p>
-                <p class="cpu_state">${state[19]}${state[20]}${state[21]}${state[22]}${state[23]}${state[24]}${state[25]}${state[26]}</p>
+                <p class="cpu_state">${show_decimal ? b_dec : b_str}</p>
                 <p class="cpu_label">instruction register</p>
-                <p class="cpu_state">${state[27]}${state[28]}${state[29]}${state[30]}${state[31]}${state[32]}${state[33]}${state[34]}</p>
+                <p class="cpu_state">${show_decimal ? i_dec : i_str}</p>
                 <p class="cpu_label">ram</p>
-                <p class="cpu_state ram">${state[35]}${state[36]}${state[37]}${state[38]}${state[39]}${state[40]}${state[41]}${state[42]}</p>
-                <p class="cpu_state ram">${state[43]}${state[44]}${state[45]}${state[46]}${state[47]}${state[48]}${state[49]}${state[50]}</p>
-                <p class="cpu_state ram">${state[51]}${state[52]}${state[53]}${state[54]}${state[55]}${state[56]}${state[57]}${state[58]}</p>
-                <p class="cpu_state ram">${state[59]}${state[60]}${state[61]}${state[62]}${state[63]}${state[64]}${state[65]}${state[66]}</p>
-                <p class="cpu_state ram">${state[67]}${state[68]}${state[69]}${state[70]}${state[71]}${state[72]}${state[73]}${state[74]}</p>
-                <p class="cpu_state ram">${state[75]}${state[76]}${state[77]}${state[78]}${state[79]}${state[80]}${state[81]}${state[82]}</p>
-                <p class="cpu_state ram">${state[83]}${state[84]}${state[85]}${state[86]}${state[87]}${state[88]}${state[89]}${state[90]}</p>
-                <p class="cpu_state ram">${state[91]}${state[92]}${state[93]}${state[94]}${state[95]}${state[96]}${state[97]}${state[98]}</p>
-                <p class="cpu_state ram">${state[99]}${state[100]}${state[101]}${state[102]}${state[103]}${state[104]}${state[105]}${state[106]}</p>
-                <p class="cpu_state ram">${state[107]}${state[108]}${state[109]}${state[110]}${state[111]}${state[112]}${state[113]}${state[114]}</p>
-                <p class="cpu_state ram">${state[115]}${state[116]}${state[117]}${state[118]}${state[119]}${state[120]}${state[121]}${state[122]}</p>
-                <p class="cpu_state ram">${state[123]}${state[124]}${state[125]}${state[126]}${state[127]}${state[128]}${state[129]}${state[130]}</p>
-                <p class="cpu_state ram">${state[131]}${state[132]}${state[133]}${state[134]}${state[135]}${state[136]}${state[137]}${state[138]}</p>
-                <p class="cpu_state ram">${state[139]}${state[140]}${state[141]}${state[142]}${state[143]}${state[144]}${state[145]}${state[146]}</p>
-                <p class="cpu_state ram">${state[147]}${state[148]}${state[149]}${state[150]}${state[151]}${state[152]}${state[153]}${state[154]}</p>
-                <p class="cpu_state ram">${state[155]}${state[156]}${state[157]}${state[158]}${state[159]}${state[160]}${state[161]}${state[162]}</p>
+                <p class="cpu_state ram">${show_decimal ? ram00_dec : ram00_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram01_dec : ram01_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram02_dec : ram02_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram03_dec : ram03_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram04_dec : ram04_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram05_dec : ram05_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram06_dec : ram06_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram07_dec : ram07_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram08_dec : ram08_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram09_dec : ram09_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram10_dec : ram10_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram11_dec : ram11_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram12_dec : ram12_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram13_dec : ram13_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram14_dec : ram14_str}</p>
+                <p class="cpu_state ram">${show_decimal ? ram15_dec : ram15_str}</p>
                 `;
                 return template;
             }
@@ -2089,9 +2153,7 @@
                 1 1 1629 1809 LID
                 1 1 1626 1810 LID
             `;
-            var input = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-            $( '.visualizer' ).innerHTML = displayState( input );
-            output = evalCircuit( circuit, input );
+            $( '.visualizer' ).innerHTML = displayState( output );
         </script>
     </body>
 </html>
