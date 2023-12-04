@@ -116,6 +116,7 @@
                 7. JIC -- jump to another instruction if the carry bit is set, that is, if register A overflowed while computing a previous instruction (this allows for "bounded loops" so that the cpu can run a loop for X number of times and then break out of it)<br>
                 8. HLT -- stop the computer (actually stops the microinstruction counter from incrementing so that the computer stops changing its state til it runs out of cycles)<br>
             </div>
+            <br><br>
             <button class="go_back">Go back</button>
         </div>
         <script>
@@ -137,7 +138,8 @@
                 $( '.visualizer' ).innerHTML = displayState( input );
                 output = evalCircuit( circuit, input );
                 $( '.explainer' ).innerHTML = `
-                    <p style="margin-top: 0;">
+                    <h3 style="margin-top: 0;">Counting program</h3>
+                    <p>
                         The following program initializes the A register to 0 and then enters an incrementation loop, incrementing that register by 3 repeatedly. It gets stuck in this loop until the cpu stops cycling. In an ideal world, it would never stop cycling, but on bitcoin, it must stop before 2^128 cycles go by because bitcoin addresses don't have enough tapleaves to make more cycles than that.
                     </p>
                     <p>
@@ -163,7 +165,23 @@
                         JMP 3 - go back to ADD 15 and loop<br>
                     </div>
                     <br><br>
+                    <button class="next">Increment clock</button>
+                    <button class="automate_clock">Auto increment clock</button>
+                    <button class="stop_clock">Stop clock</button>
+                    <br><br>
                 `;
+                $$( '.automate_clock' ).forEach( item => {
+                    item.onclick = () => stop = false;
+                });
+                $$( '.next' ).forEach( item => {
+                    item.onclick = () => {
+                        $( '.visualizer' ).innerHTML = displayState( output );
+                        output = evalCircuit( circuit, output );
+                    }
+                });
+                $$( '.stop_clock' ).forEach( item => {
+                    item.onclick = () => stop = true;
+                });
             }
             $( '.load_bounded_loop_test' ).onclick = () => {
                 $( '.halted' ).classList.add( "hidden" );
@@ -171,7 +189,8 @@
                 $( '.visualizer' ).innerHTML = displayState( input );
                 output = evalCircuit( circuit, input );
                 $( '.explainer' ).innerHTML = `
-                    <p style="margin-top: 0;">
+                    <h3 style="margin-top: 0;">Bounded loop test</h3>
+                    <p>
                         The following program initializes the A register to a high value (252) and then enters an incrementation loop, incrementing that register by 1 repeatedly. It would get stuck in that loop forever, except that the JIC instruction causes it to depart the loop when Register A overflows due to being too small to hold the number 256. The JIC flag thus breaks it out of the loop, skipping to an instruction that stores the contents of the A register (which are now 0 due to the overflow) and halts the cpu.
                     </p>
                     <p>
@@ -201,9 +220,24 @@
                         HLT - this stops the computer<br>
                     </div>
                     <br><br>
+                    <button class="next">Increment clock</button>
+                    <button class="automate_clock">Auto increment clock</button>
+                    <button class="stop_clock">Stop clock</button>
+                    <br><br>
                 `;
+                $$( '.automate_clock' ).forEach( item => {
+                    item.onclick = () => stop = false;
+                });
+                $$( '.next' ).forEach( item => {
+                    item.onclick = () => {
+                        $( '.visualizer' ).innerHTML = displayState( output );
+                        output = evalCircuit( circuit, output );
+                    }
+                });
+                $$( '.stop_clock' ).forEach( item => {
+                    item.onclick = () => stop = true;
+                });
             }
-
             $( '.next' ).onclick = () => {
                 $( '.visualizer' ).innerHTML = displayState( output );
                 output = evalCircuit( circuit, output );
