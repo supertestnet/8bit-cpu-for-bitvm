@@ -428,7 +428,8 @@
                 var m_str = `${state[ 6 ]}${state[ 7 ]}${state[ 8 ]}${state[ 9 ]}`;
                 var a_str = `${state[ 11 ]}${state[ 12 ]}${state[ 13 ]}${state[ 14 ]}${state[ 15 ]}${state[ 16 ]}${state[ 17 ]}${state[ 18 ]}`;
                 var b_str = `${state[19]}${state[20]}${state[21]}${state[22]}${state[23]}${state[24]}${state[25]}${state[26]}`;
-                var i_str = `${state[27]}${state[28]}${state[29]}${state[30]}${state[31]}${state[32]}${state[33]}${state[34]}`;
+                var i_cmd_str = `${state[27]}${state[28]}${state[29]}${state[30]}`;
+                var i_arg_str = `${state[31]}${state[32]}${state[33]}${state[34]}`;
                 var ram00_str = `${state[35]}${state[36]}${state[37]}${state[38]}${state[39]}${state[40]}${state[41]}${state[42]}`;
                 var ram01_str = `${state[43]}${state[44]}${state[45]}${state[46]}${state[47]}${state[48]}${state[49]}${state[50]}`;
                 var ram02_str = `${state[51]}${state[52]}${state[53]}${state[54]}${state[55]}${state[56]}${state[57]}${state[58]}`;
@@ -450,7 +451,17 @@
                 var m_dec = parseInt( m_str, 2 );
                 var a_dec = parseInt( a_str, 2 );
                 var b_dec = parseInt( b_str, 2 );
-                var i_dec = parseInt( i_str, 2 );
+                var i_cmd_dec = parseInt( i_cmd_str, 2 );
+                if ( i_cmd_dec == 0 ) i_cmd_dec = "NOP";
+                if ( i_cmd_dec == 1 ) i_cmd_dec = "LDA";
+                if ( i_cmd_dec == 2 ) i_cmd_dec = "ADD";
+                if ( i_cmd_dec == 3 ) i_cmd_dec = "SUB";
+                if ( i_cmd_dec == 4 ) i_cmd_dec = "STA";
+                if ( i_cmd_dec == 5 ) i_cmd_dec = "LDI";
+                if ( i_cmd_dec == 6 ) i_cmd_dec = "JMP";
+                if ( i_cmd_dec == 7 ) i_cmd_dec = "JIC";
+                if ( i_cmd_dec == 15 ) i_cmd_dec = "HLT";
+                var i_arg_dec = parseInt( i_arg_str, 2 );
                 var ram00_dec = parseInt( ram00_str, 2 );
                 var ram01_dec = parseInt( ram01_str, 2 );
                 var ram02_dec = parseInt( ram02_str, 2 );
@@ -480,7 +491,7 @@
                 <p class="cpu_label">register B</p>
                 <p class="cpu_state">${show_decimal ? b_dec : b_str}</p>
                 <p class="cpu_label">instruction register</p>
-                <p class="cpu_state">${show_decimal ? i_dec : i_str}</p>
+                <p class="cpu_state">${show_decimal ? i_cmd_dec : i_cmd_str} ${show_decimal ? i_arg_dec : i_arg_str}</p>
                 <p class="cpu_label">ram</p>
                 <p class="cpu_state ram">${show_decimal ? ram00_dec : ram00_str}</p>
                 <p class="cpu_state ram">${show_decimal ? ram01_dec : ram01_str}</p>
