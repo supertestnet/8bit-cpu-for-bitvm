@@ -96,7 +96,10 @@ def lex(args):
     mybin = bin(int(my_hexdata, scale))[2:].zfill(num_of_bits)
     # f.write(program.read())
     # f.write(mybin)
-    mybytes = str.encode(mybin)
+    padded = mybin.zfill(163)
+    objectified = [*padded]
+    # mybytes = str.encode(mybin)
+    mybytes = str.encode( str( objectified ) )
     f.write(mybytes)
 
 if __name__ == "__main__":
