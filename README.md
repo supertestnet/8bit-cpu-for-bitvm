@@ -4,8 +4,12 @@ Write bitvm programs without learning circuit diagrams
 # What is this?
 This project contains a boolean logic circuit that emulates a turing complete 8 bit cpu that can run in bitvm. It also contains a debugger and state machine visualizer I wrote in python. If I can just write a compiler for it, coders will be able to program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
 
+# How to try it
+
+Click here: https://supertestnet.github.io/8bit-cpu-for-bitvm/
+
 # What is the status?
-Every component of the cpu has been successfully tested. The last thing I successfully tested was a conditional jump instruction I wrote for its Assembly decoder, which makes the cpu turing complete. It currently supports 9 Assembly instructions documented below. So the status is: you can write programs in Assembly (using only the commands it currently supports), manually convert them to binary (I don't have a compiler yet), store them in RAM, run the computer, read the results it produces, and (I haven't tested this part yet) even lock up some bitcoins so that they can only be unlocked by your counterparty if he or she runs your program with inputs that produce some results you want.
+Every component of the cpu has been successfully tested. The last thing I successfully tested was a conditional jump instruction I wrote for its Assembly decoder, which makes the cpu turing complete. It currently supports 12 Assembly instructions documented below. So the status is: you can write programs in Assembly (using only the commands it currently supports), convert them to binary using the compiler.py file included in this repository, store the programs in RAM, run the computer, read the results it produces, and (I haven't tested this part yet) even lock up some bitcoins so that they can only be unlocked by your counterparty if he or she runs your program with inputs that produce some results you want.
 
 However, all of that assumes you can do something useful in only one clock cycle, which is probably not usually true. Emulating and automating clock cycles will be a challenge for me and I expect it to take an additional week. Before I automate it, I will have to do some tests of the circuit by copy-pasting the full circuit several times, manually resetting the "input" wires each time so that they point at the output gates of the previous copy of the circuit. That will be a real chore if I have to do that e.g. dozens of times per test.
 
@@ -28,6 +32,29 @@ I hope to write some javascript to automate that so I can produce a version of t
 ```
 
 Commands 1-6 take parameters. After specifying the command, give a number 0-15. Commands 1, 2, 3, and 4 use this number to set the ram to that byte, which it then loads into A (LDA), adds to A (ADD), subtracts from A (SUB), or overwrites with the contents of A (STA). Command 5 puts the number you specify directly into register A (usually it's a 1 or a 0 but it can be anything from 0 to 15). Commands 6 and 7 use the number you specify to determine which Assembly instruction in your program you want to jump to.
+
+# A word about the compiler
+
+The compiler is slightly modified from this project: https://github.com/tayler6000/BenEater8BitAssembler
+
+To use it, create a .asm file with your program in it, and run the compiler like this:
+
+```
+python3 compiler.py my_program.asm -o my_program.bin
+```
+
+I eventually plan to let you upload the .bin file the compiler generates, but for right now I made the compiler also spit out a copy/pastable version of the binary so you can enter it into the online demo page [here](https://supertestnet.github.io/8bit-cpu-for-bitvm/) (just click "Use your own").
+
+The compiler was originally written for a different computer so I had to modify it to get it to work with this one. Possibly due to my modifications, there is a compatibility issue between the compiler and this computer. If your program does not specify an initial value for the last byte of ram, your program will probably compile into a binary incorrectly. I recommend ending all your programs with this:
+
+```
+  .org 15
+  .word 0
+```
+
+That should ensure it works correctly, unless your program needs to fill every byte of RAM with commands, in which case you can fix it by figuring out the equivalent binary value for your last command and then initializing byte 15 to that. If you need help, ask in the bitvm builders telegram chatroom: https://t.me/bitvm_chat
+
+Also note that Assembly expects a certain syntax. Almost all lines of your code should be indented with exactly 2 spaces. The only exception is for labels. Labels are not supposed to be indented, they must be only 1 word (but you can use underscores), and they need a colon after them. You can learn more by watching youtube videos about how Assembly works, but remember that Assembly has a lot of instructions in it and this computer only supports the ones documented above, so don't go hog wild with all the crazy sstuff Assembly can do on other computers -- just stick to the things it can do on *this* computer or the compiler will get mad and throw an error.
 
 # Sample programs
 
