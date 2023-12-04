@@ -30,7 +30,7 @@ Commands 1-6 take parameters. After specifying the command, give a number 0-15. 
 
 ## Count forever
 
-The following program initializes the A register to 0 and then begins an incrementation loop, incrementing that register by 1 repeatedly. It gets stuck in this loop until the cpu stops cycling. In an ideal world, it would never stop cycling, but on bitcoin, it must stop before 2^128 cycles go by because bitcoin addresses don't have enough tapleaves to make more cycles than that.
+The following program initializes the A register to 0 and then begins an incrementation loop, incrementing that register by 3 repeatedly. It gets stuck in this loop until the cpu stops cycling. In an ideal world, it would never stop cycling, but on bitcoin, it must stop before 2^128 cycles go by because bitcoin addresses don't have enough tapleaves to make more cycles than that.
 
 Here it is in Assembly:
 
