@@ -6,7 +6,7 @@ import io
 
 commands = { b"NOP":0b00000000, b"LDA":0b00010000, b"ADD":0b00100000,
              b"SUB":0b00110000, b"STA":0b01000000, b"LDI":0b01010000,
-             b"JMP":0b01100000, b"JC":0b01110000,  b"HLT":0b11110000 }
+             b"JMP":0b01100000, b"JIC":0b01110000,  b"HLT":0b11110000 }
 
 parsed = []
 labels = {}
