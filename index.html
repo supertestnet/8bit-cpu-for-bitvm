@@ -176,7 +176,11 @@
                 $$( '.next' ).forEach( item => {
                     item.onclick = () => {
                         $( '.visualizer' ).innerHTML = displayState( output );
+                        var init = output;
                         output = evalCircuit( circuit, output );
+                        if ( init == output ) {
+                            $( '.halted' ).classList.remove( "hidden" );
+                        }
                     }
                 });
                 $$( '.stop_clock' ).forEach( item => {
@@ -231,7 +235,11 @@
                 $$( '.next' ).forEach( item => {
                     item.onclick = () => {
                         $( '.visualizer' ).innerHTML = displayState( output );
+                        var init = output;
                         output = evalCircuit( circuit, output );
+                        if ( init == output ) {
+                            $( '.halted' ).classList.remove( "hidden" );
+                        }
                     }
                 });
                 $$( '.stop_clock' ).forEach( item => {
@@ -240,7 +248,11 @@
             }
             $( '.next' ).onclick = () => {
                 $( '.visualizer' ).innerHTML = displayState( output );
+                var init = output;
                 output = evalCircuit( circuit, output );
+                if ( init == output ) {
+                    $( '.halted' ).classList.remove( "hidden" );
+                }
             }
             $( '.automate_clock' ).onclick = () => stop = false;
             $( '.stop_clock' ).onclick = () => stop = true;
