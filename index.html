@@ -150,6 +150,9 @@
                 6. JMP -- jump to another instruction<br>
                 7. JIC -- jump to another instruction if the carry bit is set, that is, if register A overflowed while computing a previous instruction (this allows for "bounded loops" so that the cpu can run a loop for X number of times and then break out of it)<br>
                 8. HLT -- stop the computer (actually stops the microinstruction counter from incrementing so that the computer stops changing its state til it runs out of cycles)<br>
+                9. .org -- initialize a byte of ram to a certain value (used in combination with .word)<br>
+                10. .word -- the value to initialize a byte of ram to (used in combination with .org)<br>
+                11. labels -- Assembly lets you name your functions using labels. An example is given in <br>test_program.asm. Named functions can be written once and then called one or more times throughout your program without having to write out the code multiple times.<br>
             </div>
             <br><br>
             <button class="go_back">Go back</button>
