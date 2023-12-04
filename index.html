@@ -110,11 +110,13 @@
                 Step 3. Learn what in the world is happening
             </h3>
             <button class="learn">Learn about bitvm</button>
-<!--             <h3>
+            <h3>
                 Step 4. Write a program yourself
             </h3>
             <button class="write">Try it</button>
- -->            <br><br>
+            <h3>
+                Here is the computer
+            </h3>
             <div class="visualizer_container">
                 <div class="explainer"></div>
                 <div class="halted hidden">
@@ -169,6 +171,149 @@
             <br><br>
             <button class="go_back">Go back</button>
         </div>
+        <div class="learn_to_write hidden">
+            <button class="go_back">Go back</button>
+            <p>
+                There are three steps to write your own program:
+            </p>
+            <ol>
+                <li>Write it in Assembly</li>
+                <li>Use a compiler to generate a binary from your Assembly code</li>
+                <li>Paste the binary into this simulator using the "Use your own" button under Step 1 on the previous page</li>
+            </ol>
+            <p style="font-weight: bold;">
+                How to write in Assembly
+            </p>
+            <p>
+                To write an Assembly program, first open up a text editor like Windows Notepad or Visual Studio or Sublime or whatever you like. Let's make your first program very simple: it will just count from 0 to 3.
+            </p>
+            <p>
+                The first thing to write in your program is two spaces. This is because Assembly wants every line of code except labels (which we'll learn about later) to be indented by two spaces. Then write LDI 0, which stands for "Load Immediate 0," which means "put the value 0 into the A register of the computer." We're doing this first because we are counting from 0 to 10. Your program should look like this:
+            </p>
+            <div class="code" style="white-space: pre;">  LDI 0</div>
+            <p>
+                (Notice the two spaces)
+            </p>
+            <p>
+                Next we need to add the number 1 to Register A. You might *think* that means our next command should be ADD 1. Nope. The ADD command uses the number you pass to look up the number stored in a byte of ram, and whatever number it finds there, *that* is what it adds to Register A.
+            </p>
+            <p>
+                So if you do ADD 1, it will look up the value stored in byte 1 of ram. But that is where *this command* will be. (The first command, LDI 0, will be stored in byte 0 of ram. The second command, this one, will be stored in byte 1 of ram.)
+            </p>
+            <p>
+                So instead, let's tell it to add whatever is in byte 15 of ram to register A (byte 15 is currently empty), and next I'll show you how to add a 1 to byte 15 of ram so that it adds 1 to register A. To add the contents of byte 15 of ram to Register A, write this: ADD 15. Here is what your program should look like now:
+            </p>
+            <div class="code" style="white-space: pre;">  LDI 0
+  ADD 15</div>
+            <p>
+                If we compiled the code right now, it would initialize A to 0 and then add 0 to it because byte 15 starts out as 0 by default. Now let's initialize byte 15 of ram to 1. Type this:
+            </p>
+            <div class="code" style="white-space: pre;">  .org 15
+  .word 1</div>
+            <p>
+                In Assembly, .org stands for "origin" and it tells the compiler where in ram to put the next piece of data. (I.e. where that piece of data should "start out" when you boot the computer -- where its origination point should be.) .word is just the word "word," which is what Assembly calls a piece of data that is not an argument for a function (like ADD) but just a string or number you're putting in some part of memory. So this pair of commands tells Assembly to put the "word" 1 (which is an integer) in byte 15 of ram. Your code should look like this now:
+            </p>
+            <div class="code" style="white-space: pre;">  LDI 0
+  ADD 15
+  .org 15
+  .word 1</div>
+            <p>
+                If you ran this code through the compiler and then executed the binary, the computer would add the number 1 to register A -- yay, progress! Whenever this computer finishes an operation, it increments the memory register at the next byte of ram in expectation of another command. So after running lines 0 and 1 (LDI 0 and ADD 15) it would increment the memory register to byte 3 of ram.
+            </p>
+            <p>
+                There is nothing there, which means that byte of ram is all 0s, and this computer interprets all 0s as the default operation: NOP or "no operation," where it does nothing. Then, since there is no HLT (halt) command, it would try to run the command in the next byte of ram (byte 4), which is empty again so it's another NOP, and so on, all the way til it gets to byte 15. That one is not empty, it contains the number 1. However, only the first four bits of RAM are interpreted as an instruction, the others are used to set the argument of 0 through 15. But the first four bits of byte 15 are all 0s so it would still think that's a NOP.
+            </p>
+            <p>
+                Then it would wrap around to the beginning, the first byte of ram, which is LDI 0. This would effectively clear the A register and begin the program again. So we would never get to 3. That's why HLT is important -- it will stop your program from looping back around and running again, which could mess up your code.
+            </p>
+            <p>
+                Anyway, what we really want is for it to add 1 to Register A two more times, so let's call ADD 15 two more times. You might expect to do that by writing them *after* the .org 15 and .word 1 commands, but "proper" Assembly syntax expects ram initializations to be done at the "end" of a file, not in the middle, so instead let's put both new ADD 15s right after the current one, and before the ram initialization commands.
+            </p>
+            <div class="code" style="white-space: pre;">  LDI 0
+  ADD 15
+  ADD 15
+  ADD 15
+  .org 15
+  .word 1</div>
+            <p>
+                Now we just need to halt our computer and we should be done.
+            </p>
+            <div class="code" style="white-space: pre;">  LDI 0
+  ADD 15
+  ADD 15
+  ADD 15
+  HLT
+  .org 15
+  .word 1</div>
+            <p>
+                Let's compile it and see if it works! Save your file as count_to_3.asm. Download the compiler available <a href="https://github.com/supertestnet/8bit-cpu-for-bitvm/blob/main/compiler.py" target="_blank">here</a> and save it in the same directory as your count_to_3.asm file. You should now have two files in that directory: compiler.py and count_to_3.asm.
+            </p>
+            <p>
+                Next, check what version of python you have by running this in your command line:
+            </p>
+            <div class="code">
+                python --version
+            </div>
+            <p>
+                If you get an error message, that means you don't have python installed. Look up how to do that. You need version 3 so look up how to install version 3.
+            </p>
+            <p>
+                If you run python --version successfully and it says you have version 2, version 1, that's bad -- really, anything other than version 3 is bad, unless it's version 3-point-something. E.g. 3.6 or 3.7 will both work fine -- anything in version 3 is okay. If you don't have version 3-point-something, look up how to install it or look up how to upgrade your current version of python to version 3-point-something.
+            </p>
+            <p>
+                Depending on whether you "installed" version 3 or "upgraded" to version 3, you might need to run the compiler in one of two ways. If you installed it, run the compiler like this:
+            </p>
+            <div class="code">
+                python3 compiler.py count_to_3.asm -o count_to_3.bin
+            </div>
+            <p>
+                But if you "upgraded" to version 3, that should mean when you run python --version it tells you you have version 3-point-something, and in that case you can run the compiler like this:
+            </p>
+            <div class="code">
+                python compiler.py count_to_3.asm -o count_to_3.bin
+            </div>
+            <p>
+                (Notice you no longer had to specify python3 -- just python is sufficient in this case)
+            </p>
+            <p>
+                If the compiler gives you any errors, ask me how to resolve them by contacting me in <a href="https://t.me/bitvm_chat" target="_blank">this telegram chat</a> (it's called Bitvm Builders -- I go by @super_testnet there). You can also ask other people there if I'm not around.
+            </p>
+            <p>
+                If the compiler does not give you any errors it should show you something that looks like this:
+            </p>
+            <div class="code">
+                Done, your binary is in the file my_program.bin. Here is a copy in case you want to copy/paste it:<br>
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+            </div>
+            <p>
+                This simulator site doesn't support uploading a binary yet but it does support pasting one in using the copy/pastable version. So copy whatever your compiler gave you, go to the previous page on this website, and, under Step 1, click "use your own." Paste your binary into that form and click Submit. Then, if you didn't get any errors, start the computer with the "increment clock" buttons and watch it work.
+            </p>
+            <p>
+                You should see the number in Register A increment from 0 to 3 in binary and then the computer should halt. If you can't read binary, you can use the "Toggle Decimal" button to show what it's doing in decimal. If you have any trouble, contact me or the other bitvm builders in <a href="https://t.me/bitvm_chat" target="_blank">this telegram chat</a>.
+            </p>
+            <p>
+                Now that you've written your first program, start experimenting! Here are the commands this cpu supports:
+            </p>
+            <div class="code">
+                0. NOP -- do nothing<br>
+                1. LDA -- load a value from ram into register A<br>
+                2. ADD -- put the sum of registers A and B in register A<br>
+                3. SUB -- put the difference of registers A and B in register A<br>
+                4. STA -- store register A in ram<br>
+                5. LDI -- load a value directly into register A (not from ram)<br>
+                6. JMP -- jump to another instruction<br>
+                7. JIC -- jump to another instruction if the carry bit is set, that is, if register A overflowed while computing a previous instruction (this allows for "bounded loops" so that the cpu can run a loop for X number of times and then break out of it)<br>
+                8. HLT -- stop the computer (actually stops the microinstruction counter from incrementing so that the computer stops changing its state til it runs out of cycles)<br>
+                9. .org -- initialize a byte of ram to a certain value (used in combination with .word)<br>
+                10. .word -- the value to initialize a byte of ram to (used in combination with .org)<br>
+                11. labels -- Assembly lets you name your functions using labels. An example is given in <br>test_program.asm. Named functions can be written once and then called one or more times throughout your program without having to write out the code multiple times.<br>
+            </div>
+            <p>
+                There are also some sample .asm files in <a href="https://github.com/supertestnet/8bit-cpu-for-bitvm" target="_blank">this github repository</a> if you want inspiration about what you can do with the language. And don't hesitate to talk with other builders about it in <a href="https://t.me/bitvm_chat" target="_blank">this telegram chat</a>.
+            </p>
+            <br>
+            <button class="go_back">Go back</button>
+        </div>
         <script>
             var output = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
             var stop = true;
@@ -217,11 +362,18 @@
                 item.onclick = () => {
                     $( '.cpu' ).classList.remove( "hidden" );
                     $( '.learn_about_bitvm' ).classList.add( "hidden" );
+                    $( '.learn_to_write' ).classList.add( "hidden" );
                 }
             });
             $( '.learn' ).onclick = () => {
                 $( '.cpu' ).classList.add( "hidden" );
                 $( '.learn_about_bitvm' ).classList.remove( "hidden" );
+                $( '.learn_to_write' ).classList.add( "hidden" );
+            }
+            $( '.write' ).onclick = () => {
+                $( '.cpu' ).classList.add( "hidden" );
+                $( '.learn_about_bitvm' ).classList.add( "hidden" );
+                $( '.learn_to_write' ).classList.remove( "hidden" );
             }
             $( '.load_counting_program' ).onclick = () => {
                 $( '.halted' ).classList.add( "hidden" );
