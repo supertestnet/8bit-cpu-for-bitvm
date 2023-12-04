@@ -34,6 +34,10 @@
             .hidden {
                 display: none;
             }
+            .visualizer_centerer {
+                display: flex;
+                justify-content: center;
+            }
             .code {
                 font-family: monospace;
                 background-color: #ccc;
@@ -50,7 +54,7 @@
             .cpu_label {
                 font-weight: bold;
             }
-            .use_your_own_form {
+            .use_your_own_form, .visualizer_container {
                 border: 1px solid black;
                 border-radius: 1rem;
                 padding: 1rem;
@@ -85,12 +89,14 @@
         <h1>Welcome to the STU-1</h1>
         <p>An 8 bit cpu for bitvm</p>
         <div class="cpu">
-            <div class="visualizer_container">
-                <div class="halted hidden">
-                    The computer entered a halt state
-                    <br><br>
+            <div class="visualizer_centerer">
+                <div class="visualizer_container">
+                    <div class="halted hidden">
+                        The computer entered a halt state
+                        <br><br>
+                    </div>
+                    <div class="visualizer"></div>
                 </div>
-                <div class="visualizer"></div>
             </div>
             <h3>
                 Step 1. Pick a program you want to run
@@ -98,7 +104,6 @@
             <button class="load_counting_program">Counting program</button>
             <button class="load_bounded_loop_test">Bounded loop test</button>
             <button class="use_your_own">Use your own</button>
-            <div class="explainer"></div>
             <div class="use_your_own_form hidden">
                 <p>Paste your program here</p>
                 <textarea class="paste_program"></textarea>
@@ -114,6 +119,7 @@
             <button class="automate_clock">Auto increment clock</button>
             <button class="stop_clock">Stop clock</button>
             <button class="toggle_decimal">Toggle decimal display</button>
+            <div class="explainer"></div>
             <h3>
                 Step 3. Learn what in the world is happening
             </h3>
@@ -377,7 +383,7 @@
                 output = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1,0,1,0,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,0,1,1,1,1,0,1,0,0,1,1,1,0,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
                 $( '.visualizer' ).innerHTML = displayState( output );
                 $( '.explainer' ).innerHTML = `
-                    <h3 style="margin-top: 0;">Counting program</h3>
+                    <h3>Counting program</h3>
                     <p>
                         The following program initializes the A register to 0 and then enters an incrementation loop, incrementing that register by 3 repeatedly. It gets stuck in this loop until the cpu stops cycling. In an ideal world, it would never stop cycling, but on bitcoin, it must stop before 2^128 cycles go by because bitcoin addresses don't have enough tapleaves to make more cycles than that.
                     </p>
@@ -405,33 +411,7 @@
                         4. .org 15 - this tells the compiler to initialize byte 15 to a certain value<br>
                         5. .word 3 - this tells the compiler what value to initialize the previously-referenced byte to<br>
                     </div>
-                    <br><br>
-                    <button class="next">Increment clock</button>
-                    <button class="automate_clock">Auto increment clock</button>
-                    <button class="stop_clock">Stop clock</button>
-                    <button class="toggle_decimal">Toggle decimal display</button>
-                    <br><br>
                 `;
-                $$( '.automate_clock' ).forEach( item => {
-                    item.onclick = () => stop = false;
-                });
-                $$( '.next' ).forEach( item => {
-                    item.onclick = () => {
-                        var init = output;
-                        output = evalCircuit( circuit, output );
-                        $( '.visualizer' ).innerHTML = displayState( output );
-                        if ( init == output ) $( '.halted' ).classList.remove( "hidden" );
-                    }
-                });
-                $$( '.stop_clock' ).forEach( item => {
-                    item.onclick = () => stop = true;
-                });
-                $$( '.toggle_decimal' ).forEach( item => {
-                    item.onclick = () => {
-                        show_decimal = INV( show_decimal );
-                        $( '.visualizer' ).innerHTML = displayState( output );
-                    }
-                });
             }
             $( '.load_bounded_loop_test' ).onclick = () => {
                 $( '.halted' ).classList.add( "hidden" );
@@ -439,7 +419,7 @@
                 output = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,1,1,1,1,1,0,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,0,1,1,0,0,0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0];
                 $( '.visualizer' ).innerHTML = displayState( output );
                 $( '.explainer' ).innerHTML = `
-                    <h3 style="margin-top: 0;">Bounded loop test</h3>
+                    <h3>Bounded loop test</h3>
                     <p>
                         The following program initializes the A register to a high value (252) and then enters an incrementation loop, incrementing that register by 1 repeatedly. It would get stuck in that loop forever, except that the JIC instruction causes it to depart the loop when Register A overflows due to being too small to hold the number 256. The JIC flag thus breaks it out of the loop, skipping to an instruction that stores the contents of the A register (which are now 0 due to the overflow) and halts the cpu.
                     </p>
@@ -475,33 +455,27 @@
                         .org 15 - this tells the compiler to initialize byte 15 to a certain value
                         .word 252 - this tells the compiler what value to initialize the previously-referenced byte to
                     </div>
-                    <br><br>
-                    <button class="next">Increment clock</button>
-                    <button class="automate_clock">Auto increment clock</button>
-                    <button class="stop_clock">Stop clock</button>
-                    <button class="toggle_decimal">Toggle decimal display</button>
-                    <br><br>
                 `;
-                $$( '.automate_clock' ).forEach( item => {
-                    item.onclick = () => stop = false;
-                });
-                $$( '.next' ).forEach( item => {
-                    item.onclick = () => {
-                        var init = output;
-                        output = evalCircuit( circuit, output );
-                        $( '.visualizer' ).innerHTML = displayState( output );
-                        if ( init == output ) $( '.halted' ).classList.remove( "hidden" );
-                    }
-                });
-                $$( '.stop_clock' ).forEach( item => {
-                    item.onclick = () => stop = true;
-                });
-                $$( '.toggle_decimal' ).forEach( item => {
-                    item.onclick = () => {
-                        show_decimal = INV( show_decimal );
-                        $( '.visualizer' ).innerHTML = displayState( output );
-                    }
-                });
+                // $$( '.automate_clock' ).forEach( item => {
+                //     item.onclick = () => stop = false;
+                // });
+                // $$( '.next' ).forEach( item => {
+                //     item.onclick = () => {
+                //         var init = output;
+                //         output = evalCircuit( circuit, output );
+                //         $( '.visualizer' ).innerHTML = displayState( output );
+                //         if ( init == output ) $( '.halted' ).classList.remove( "hidden" );
+                //     }
+                // });
+                // $$( '.stop_clock' ).forEach( item => {
+                //     item.onclick = () => stop = true;
+                // });
+                // $$( '.toggle_decimal' ).forEach( item => {
+                //     item.onclick = () => {
+                //         show_decimal = INV( show_decimal );
+                //         $( '.visualizer' ).innerHTML = displayState( output );
+                //     }
+                // });
             }
             $( '.next' ).onclick = () => {
                 var init = output;
