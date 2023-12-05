@@ -510,10 +510,11 @@
             var LID = ( a ) => Number( a );
             var evalCircuit = ( circuit, input ) => {
                 if ( typeof input == "string" ) input = input.split( "" );
-                var arr = circuit.split( `\n`);
+                var arr = circuit.split( `\n` );
                 arr.splice( 0, 1 );
                 arr.splice( arr.length - 1, 1 );
                 var i; for ( i=0; i<arr.length; i++ ) arr[ i ] = arr[ i ].replaceAll( "  ", "" );
+                var i; for ( i=0; i<arr.length; i++ ) {if ( arr[ i ].startsWith( " " ) ) arr[ i ] = arr[ i ].substring( 1 );}
                 var first_line = arr[ 0 ].split( " " );
                 var number_of_gates = Number( first_line[ 0 ] );
                 var number_of_wires = Number( first_line[ 1 ] );
@@ -531,10 +532,10 @@
                 arr.splice( 0, 4 );
                 var index; for ( index=0; index<arr.length; index++ ) {
                     item = arr[ index ];
-                    if ( item.split( " " )[ 0 ] == 1 ) {
+                    if ( Number( item.split( " " )[ 0 ] ) == 1 ) {
                         eval( `var w_${item.split( " " )[ 3 ]} = ${item.split( " " )[ 4 ]}( w_${item.split( " " )[ 2 ]} );` );
                     }
-                    if ( item.split( " " )[ 0 ] == 2 ) {
+                    if ( Number( item.split( " " )[ 0 ] ) == 2 ) {
                         eval( `var w_${item.split( " " )[ 4 ]} = ${item.split( " " )[ 5 ]}( w_${item.split( " " )[ 2 ]}, w_${item.split( " " )[ 3 ]} );` );
                     }
                 }
@@ -642,6 +643,36 @@
                 </div>
                 `;
                 return template;
+            }
+            var makeLongCircuit = ( circuit, number_of_copies_i_want ) => {
+                var arr = circuit.split( "\n" );
+                arr.splice( 0, 1 );
+                arr.splice( arr.length - 1, 1 );
+                var i; for ( i=0; i<arr.length; i++ ) arr[ i ] = arr[ i ].replaceAll( "  ", "" );
+                var i; for ( i=0; i<arr.length; i++ ) {if ( arr[ i ].startsWith( " " ) ) arr[ i ] = arr[ i ].substring( 1 );}
+                var number_of_gates = Number( arr[ 0 ].split( " " )[ 0 ] );
+                var number_of_wires = Number( arr[ 0 ].split( " " )[ 1 ] );
+                var firstline = `${number_of_gates * number_of_copies_i_want} ${number_of_wires + ( ( number_of_copies_i_want - 1 ) * number_of_gates )}`;
+                var secondline = arr[ 1 ];
+                var thirdline = arr[ 2 ];
+                arr.splice( 0, 4 );
+                var fourthline = "";
+                var rest = '';
+                var i; for ( i=0; i<number_of_copies_i_want; i++ ) {
+                    arr2 = [];
+                    var index; for ( index=0; index<arr.length; index++ ) {
+                        item = arr[ index ];
+                        if ( Number( item.split( " " )[ 0 ] ) == 1 ) {
+                            arr2[ index ] = `${item.split( " " )[ 0 ]} ${item.split( " " )[ 1 ]} ${Number( item.split( " " )[ 2 ] ) + ( ( ( i + 1 ) - 1 ) * number_of_gates )} ${Number( item.split( " " )[ 3 ] ) + ( ( ( i + 1 ) - 1 ) * number_of_gates )} ${item.split( " " )[ 4 ]}`;
+                        }
+                        if ( Number( item.split( " " )[ 0 ] ) == 2 ) {
+                            arr2[ index ] = `${item.split( " " )[ 0 ]} ${item.split( " " )[ 1 ]} ${Number( item.split( " " )[ 2 ] ) + ( ( ( i + 1 ) - 1 ) * number_of_gates )} ${Number( item.split( " " )[ 3 ] ) + ( ( ( i + 1 ) - 1 ) * number_of_gates )} ${Number( item.split( " " )[ 4 ] ) + ( ( ( i + 1 ) - 1 ) * number_of_gates )} ${item.split( " " )[ 5 ]}`;
+                        }
+                    }
+                    var j; for ( j=0; j<arr2.length; j++ ) {console.log( arr2[ j ] );rest = rest + arr2[ j ] + "\n";}
+                }
+                var final = "\n" + firstline + "\n" + secondline + "\n" + thirdline + "\n" + fourthline + "\n" + rest;
+                return final;
             }
             var circuit = `
                 1648 1811
