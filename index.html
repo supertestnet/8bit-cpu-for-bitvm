@@ -669,7 +669,7 @@
                             arr2[ index ] = `${item.split( " " )[ 0 ]} ${item.split( " " )[ 1 ]} ${Number( item.split( " " )[ 2 ] ) + ( ( ( i + 1 ) - 1 ) * number_of_gates )} ${Number( item.split( " " )[ 3 ] ) + ( ( ( i + 1 ) - 1 ) * number_of_gates )} ${Number( item.split( " " )[ 4 ] ) + ( ( ( i + 1 ) - 1 ) * number_of_gates )} ${item.split( " " )[ 5 ]}`;
                         }
                     }
-                    var j; for ( j=0; j<arr2.length; j++ ) {console.log( arr2[ j ] );rest = rest + arr2[ j ] + "\n";}
+                    var j; for ( j=0; j<arr2.length; j++ ) {rest = rest + arr2[ j ] + "\n";}
                 }
                 var final = "\n" + firstline + "\n" + secondline + "\n" + thirdline + "\n" + fourthline + "\n" + rest;
                 return final;
