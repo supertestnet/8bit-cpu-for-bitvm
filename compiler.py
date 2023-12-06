@@ -99,7 +99,10 @@ def lex(args):
     if len( mybin ) > 128:
       raise(Exception( "Your program is too big, ensure it contains a maximum of 16 bytes" ) )
     offby = len( mybin ) % 8
-    padded1 = mybin.zfill( len( mybin ) + ( 8 - offby ) )
+    if offby != 0:
+      padded1 = mybin.zfill( len( mybin ) + ( 8 - offby ) )
+    else:
+      padded1 = mybin
     padded2 = padded1.ljust( 128, "0" )
     padded = padded2.zfill(163)
     objectified = [*padded]
