@@ -5,7 +5,6 @@ Write bitvm programs without learning circuit diagrams
 This project contains a boolean logic circuit that emulates a turing complete 8 bit cpu that can run in bitvm. It also contains a debugger and state machine visualizer I wrote in bash, and an Assembly compiler someone else wrote in python, and which I modified. Coders can now program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
 
 # How to try it
-
 Click here: https://supertestnet.github.io/8bit-cpu-for-bitvm/
 
 # What is the status?
@@ -45,12 +44,11 @@ I eventually plan to let you upload the .bin file the compiler generates, but fo
 
 The compiler is slightly modified from this project: https://github.com/tayler6000/BenEater8BitAssembler It was originally written for a different computer so I had to modify it to get it to work with this one. Due to my modifications, there may be compatibility issues between the compiler and this computer. More testing is needed to determine if it works properly. If you find any bugs, please create an issue on this repository.
 
-Also note that Assembly expects a certain syntax. Almost all lines of your code should be indented with exactly 2 spaces. The only exception is for labels. Labels are not supposed to be indented, they must be only 1 word (but you can use underscores), and they need a colon after them. You can learn more by watching youtube videos about how Assembly works, but remember that Assembly has a lot of instructions in it and this computer only supports the ones documented above, so don't go hog wild with all the crazy sstuff Assembly can do on other computers -- just stick to the things it can do on *this* computer or the compiler will get mad and throw an error.
+Also note that Assembly expects a certain syntax. Almost all lines of your code should be indented with exactly 2 spaces. The only exception is for labels. Labels are not supposed to be indented, they must be only 1 word (but you can use underscores), and they need a colon after them. You can learn more by watching youtube videos about how Assembly works, but remember that Assembly has a lot of instructions in it and this computer only supports the ones documented above, so don't go hog wild with all the crazy stuff Assembly can do on other computers -- just stick to the things it can do on *this* computer or the compiler will get mad and throw an error.
 
 # Sample programs
 
 ## Count forever
-
 The following program initializes the A register to 0 and then begins an incrementation loop, incrementing that register by 3 repeatedly. It gets stuck in this loop until the cpu stops cycling. In an ideal world, it would never stop cycling, but on bitcoin, it must stop before 2^128 cycles go by because bitcoin addresses don't have enough tapleaves to make more cycles than that.
 
 Here it is in Assembly:
@@ -81,7 +79,6 @@ Here is the binary:
 ```
 
 ## Bounded loop test
-
 The following program initializes the A register to a high value (252) and then enters an incrementation loop, incrementing that register by 1 repeatedly. It would get stuck in that loop forever, except that the JIC instruction causes it to depart the loop when Register A overflows due to being too small to hold the number 256. The JIC flag thus breaks it out of the loop, skipping to an instruction that stores the contents of the A register (which are now 0 due to the overflow) and halts the cpu.
 
 Here it is in Assembly:
@@ -130,5 +127,4 @@ While researching the gameboy I realized that I know next to nothing about progr
 I also started making Ben's examples my own by tweaking them for use in bitvm. For example, I took one of the early circuits I produced (an 8 bit "alu" or arithmetic and logic unit) and made a [github project](https://github.com/supertestnet/8bit-alu-for-bitvm) for it where I included not only my logisim file but a logically-equivalent circuit that I wrote using python's circuit library, which I then exported into bristol fashion using python's Bristol Fashion Circuit Library. I also successfully ran a closely related 8bit adder in bitvm that I also produced while following Ben Eater's instructions.
 
 # What's next?
-
 Now that the cpu works and is documented, I hope to write creative programs for it and help inspire others to do likewise. Hopefully that will attract the attention of some smarter developers who can design *better* cpus for bitvm -- I dream of a 16 bit cpu and then a 32 bit cpu capable of running the linux operating system and any linux program. Imagine writing smart contracts for bitcoin in popular, modern languages like javascript or python. I don't think we're anywhere near there yet but we're probably closer than we've ever been, and I can't wait to see what's next.
