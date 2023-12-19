@@ -4,6 +4,12 @@ Write bitvm programs without learning circuit diagrams
 # What is this?
 This project contains a boolean logic circuit that emulates a turing complete 8 bit cpu that can run in bitvm. It also contains a debugger and state machine visualizer I wrote in bash, and an Assembly compiler someone else wrote in python, and which I modified. Coders can now program bitvm in an Assembly language rather than having to manually craft ever more complex boolean logic circuits.
 
+# Video explanations:
+
+https://www.youtube.com/watch?v=IRU83gRcw3Y
+
+https://www.youtube.com/watch?v=lQ9agL725G0
+
 # How to try it
 Click here: https://supertestnet.github.io/8bit-cpu-for-bitvm/
 
@@ -30,7 +36,7 @@ One thing I still need to do is write some javascript to decode bytes of RAM fro
 
 Commands 1-10 (but not 8) take parameters. After specifying the command, give a number 0-15. Commands 1, 2, 3, and 4 use this number to set the ram to that byte, which it then loads into A (LDA), adds to A (ADD), subtracts from A (SUB), or overwrites with the contents of A (STA). Command 5 puts the number you specify directly into register A (usually it's a 1 or a 0 but it can be anything from 0 to 15). Commands 6 and 7 use the number you specify to determine which Assembly instruction in your program you want to jump to. Command 9 uses the number you specify to select a byte of ram so that, with the next command (.word), you can initialize it to a certain value. The .word command uses the number you specifiy to initialize the previously-selected byte of ram to the value of the number you picked.
 
-# How to use the compiler
+# How to use the installable compiler
 
 Create a .asm file with your program in it. See the example .asm programs included in this repository for help with getting the syntax right. Some of the programs are also explained below, under Sample Programs, in case you have trouble understanding how Assembly works. Also feel free to jump in [our telegram chat](https://t.me/bitvm_chat) and ask for help. To test a program, first run the compiler like this:
 
@@ -39,6 +45,12 @@ python3 compiler.py my_program.asm -o my_program.bin
 ```
 
 I eventually plan to let you upload the .bin file the compiler generates, but for right now I made the compiler also spit out a copy/pastable version of the binary. Enter that into the online demo page [here](https://supertestnet.github.io/8bit-cpu-for-bitvm/) -- just click "Use your own," then begin incrementing the clock, and watch as your program runs in the computer.
+
+# Here is an alternative online compiler
+
+https://magical-frangipane-149aba.netlify.app/compiler
+
+See this video for how to use it: https://www.youtube.com/watch?v=lQ9agL725G0
 
 # Compiler caveats
 
